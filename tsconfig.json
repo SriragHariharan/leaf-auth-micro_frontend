@@ -24,6 +24,6 @@
   },
   "include": [
     "src/**/*" // *** The files TypeScript should type check ***
-  ],
+, "../../SignupForm.tsx"  ],
   "exclude": ["node_modules", "build", "dist"]
 }

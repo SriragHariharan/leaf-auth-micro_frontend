@@ -2,14 +2,18 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 
 import './index.scss'
+import { ImageCarousel } from './components/ImageCarousel'
+import { LoginForm } from './components/LoginForm'
 
 const App = () => (
-  <div className="mt-10 text-3xl mx-auto max-w-6xl">
-    <div>Name: auth-mf</div>
-    <div>Framework: react</div>
-    <div>Language: TypeScript</div>
-    <div>CSS: Tailwind</div>
-  </div>
+    <div className="h-screen w-screen flex">
+      <div className="hidden lg:block w-1/2 h-full">
+        <ImageCarousel />
+      </div>
+      <div className="w-full lg:w-1/2 h-full bg-white">
+        <LoginForm />
+      </div>
+    </div>
 )
 const rootElement = document.getElementById('app')
 if (!rootElement) throw new Error('Failed to find the root element')
