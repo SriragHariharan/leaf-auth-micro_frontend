@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client'
 
 import './index.scss'
 import { ImageCarousel } from './components/ImageCarousel'
-import { LoginForm } from './components/LoginForm'
+import { SignupForm } from './components/SignupForm'
 
 const App = () => (
     <div className="h-screen w-screen flex">
@@ -11,7 +11,7 @@ const App = () => (
         <ImageCarousel />
       </div>
       <div className="w-full lg:w-1/2 h-full bg-white">
-        <LoginForm />
+        <SignupForm />
       </div>
     </div>
 )
