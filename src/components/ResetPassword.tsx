@@ -1,3 +1,4 @@
+import { Leaf } from 'lucide-react';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import zxcvbn from 'zxcvbn';
@@ -7,7 +8,7 @@ interface FormData {
   confirmPassword: string;
 }
 
-export const EnterNewPassword = () => {
+export const ResetPassword = () => {
   const [passwordStrength, setPasswordStrength] = useState<string>('');
   const [passwordScore, setPasswordScore] = useState<number>(0);
 
@@ -68,6 +69,11 @@ export const EnterNewPassword = () => {
   return (
     <div className="h-full w-full flex flex-col justify-center items-center px-8 lg:px-16">
       <div className="w-full max-w-md">
+        <div className="flex items-center gap-2 mb-8">
+          <Leaf className="h-8 w-8 text-green-600" />
+          <h1 className="text-3xl font-bold text-gray-900">leaf</h1>
+        </div>
+
         <h2 className="text-2xl font-semibold text-gray-900 mb-2">Reset Your Password</h2>
         <p className="text-gray-600 mb-8">Please enter a new password for your account</p>
 
@@ -128,12 +134,6 @@ export const EnterNewPassword = () => {
           </button>
         </form>
 
-        <p className="mt-8 text-center text-sm text-gray-600">
-          Remembered your password?{' '}
-          <span className="font-medium text-green-600 hover:text-green-500">
-            Sign in
-          </span>
-        </p>
       </div>
     </div>
   );

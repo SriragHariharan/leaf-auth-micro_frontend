@@ -1,5 +1,7 @@
+import { Leaf } from 'lucide-react';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { Link } from 'react-router';
 import zxcvbn from 'zxcvbn';
 
 interface FormData {
@@ -72,6 +74,10 @@ export const SignupForm = () => {
   return (
     <div className="h-full w-full flex flex-col justify-center items-center px-8 lg:px-16">
       <div className="w-full max-w-md">
+        <div className="flex items-center gap-2 mb-8">
+          <Leaf className="h-8 w-8 text-green-600" />
+          <h1 className="text-3xl font-bold text-gray-900">leaf</h1>
+        </div>
         <h2 className="text-2xl font-semibold text-gray-900 mb-2">Create an account</h2>
         <p className="text-gray-600 mb-8">Please enter your details to sign up</p>
 
@@ -167,9 +173,9 @@ export const SignupForm = () => {
 
         <p className="mt-8 text-center text-sm text-gray-600">
           Already a user?{' '}
-          <span className="font-medium text-green-600 hover:text-green-500">
+          <Link to="/login" className="font-medium text-green-600 hover:text-green-500">
             Sign in
-          </span>
+          </Link>
         </p>
       </div>
     </div>

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Leaf } from 'lucide-react';
 import { useForm } from 'react-hook-form';
+import { Link } from 'react-router';
 
 interface FormData {
   email: string;
@@ -91,9 +92,9 @@ export const LoginForm = () => {
                 Remember me
               </label>
             </div> */}
-            <button type="button" className="text-sm font-medium text-green-600 hover:text-green-500">
+            <Link to="/confirm-email" type="button" className="text-sm font-medium text-green-600 hover:text-green-500">
               Forgot password?
-            </button>
+            </Link>
           </div>
 
           <button
@@ -106,9 +107,9 @@ export const LoginForm = () => {
 
         <p className="mt-8 text-center text-sm text-gray-600">
           Don't have an account?{' '}
-          <span className="font-medium text-green-600 hover:text-green-500">
+          <Link to="/signup" className="font-medium text-green-600 hover:text-green-500">
             Sign up
-          </span>
+          </Link>
         </p>
       </div>
     </div>

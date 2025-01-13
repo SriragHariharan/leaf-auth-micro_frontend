@@ -1,6 +1,7 @@
 import React from 'react';
 import { Leaf } from 'lucide-react';
 import { useForm } from 'react-hook-form';
+import { Link } from 'react-router';
 
 interface FormData {
   email: string;
@@ -65,9 +66,9 @@ export const EnterEmailForm = () => {
 
         <p className="mt-8 text-center text-sm text-gray-600">
           Recollected your password?{' '}
-          <span className="font-medium text-green-600 hover:text-green-500">
+          <Link to="/login" className="font-medium text-green-600 hover:text-green-500">
             Click here
-          </span>
+          </Link>
         </p>
       </div>
     </div>
