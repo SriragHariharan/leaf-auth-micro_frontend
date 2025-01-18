@@ -1,7 +1,10 @@
 import React from 'react';
 import { Leaf } from 'lucide-react';
 import { useForm } from 'react-hook-form';
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
+import axios from 'axios';
+import { LEAF_AX_TOKEN, LEAF_BACKEND_URL, LEAF_RF_TOKEN } from '../constants/constants';
+import { showErrorToast } from '../helpers/toastify';
 
 interface FormData {
   email: string;
@@ -9,7 +12,10 @@ interface FormData {
   rememberMe?: boolean;
 }
 
-export const LoginForm = () => {
+import '../index.scss'
+import { ToastContainer } from 'react-toastify';
+
+const LoginForm = () => {
   const {
     register,
     handleSubmit,
@@ -22,12 +28,24 @@ export const LoginForm = () => {
     },
   });
 
+  const navigate = useNavigate();
+
   const onSubmit = (data: FormData) => {
-    console.log(data);
+    axios.post( LEAF_BACKEND_URL + "/user/auth/login", { ...data } )
+    .then(resp => {
+      localStorage.setItem(LEAF_AX_TOKEN, resp?.data?.data?.accessToken );
+      localStorage.setItem(LEAF_RF_TOKEN, resp?.data?.data?.refreshToken );
+      navigate("/");
+    })
+    .catch(err => {
+      showErrorToast(err?.response?.data?.error?.message);
+      console.log(err?.response?.data?.error?.message)
+    })
   };
 
   return (
     <div className="h-full w-full flex flex-col justify-center items-center px-8 lg:px-16">
+      <ToastContainer />
       <div className="w-full max-w-md">
         <div className="flex items-center gap-2 mb-8">
           <Leaf className="h-8 w-8 text-green-600" />
@@ -115,3 +133,5 @@ export const LoginForm = () => {
     </div>
   );
 };
+
+export default LoginForm;

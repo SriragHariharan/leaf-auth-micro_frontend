@@ -1,8 +1,14 @@
+import axios from 'axios';
 import { Leaf } from 'lucide-react';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import zxcvbn from 'zxcvbn';
+import { LEAF_BACKEND_URL, LEAF_USER_ID } from '../constants/constants';
+import { showErrorToast } from '../helpers/toastify';
+
+import '../index.scss'
+import { ToastContainer } from 'react-toastify';
 
 interface FormData {
   username: string;
@@ -11,9 +17,10 @@ interface FormData {
   confirmPassword: string;
 }
 
-export const SignupForm = () => {
+const SignupForm = () => {
   const [passwordStrength, setPasswordStrength] = useState<string>('');
   const [passwordScore, setPasswordScore] = useState<number>(0);
+  const navigate = useNavigate();
 
   const {
     register,
@@ -49,8 +56,14 @@ export const SignupForm = () => {
     return true;  // Return true if passwords match
   };
 
+  //submit data to backend service
   const onSubmit = (data: FormData) => {
-    console.log(data);
+    axios.post( LEAF_BACKEND_URL + "/user/auth/signup", { ...data } )
+    .then(resp => {
+      localStorage.setItem(LEAF_USER_ID, resp?.data?.data?.userID)
+      navigate("/confirm-otp");
+    })
+    .catch(err => showErrorToast(err?.response?.data?.error?.message))
   };
 
   // Function to determine the strength level for display
@@ -73,6 +86,7 @@ export const SignupForm = () => {
 
   return (
     <div className="h-full w-full flex flex-col justify-center items-center px-8 lg:px-16">
+      <ToastContainer />
       <div className="w-full max-w-md">
         <div className="flex items-center gap-2 mb-8">
           <Leaf className="h-8 w-8 text-green-600" />
@@ -181,3 +195,5 @@ export const SignupForm = () => {
     </div>
   );
 };
+
+export default SignupForm;

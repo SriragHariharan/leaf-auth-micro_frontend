@@ -97,14 +97,43 @@ module.exports = {
   },
   plugins: [
     new rspack.container.ModuleFederationPlugin({
-      name: 'auth_mf',
+      name: 'authMF',
       filename: 'remoteEntry.js',
-      exposes: {},
-      shared: {
-        react: { eager: true },
-        'react-dom': { eager: true },
-        'react-router-dom': { eager: true },
+      exposes: {
+        "./LoginForm": "./src/components/LoginForm.tsx",
+        "./SignupForm": "./src/components/SignupForm.tsx",
+        "./ImageCarousel": "./src/components/ImageCarousel.tsx",
+        "./EmailForm": "./src/components/EnterEmailForm.tsx",
+        "./OtpForm": "./src/components/OtpForm.tsx",
+        "./ResetPassword": "./src/components/ResetPassword.tsx",
       },
+      shared: {
+        react: {
+          singleton: true,
+          requiredVersion: '^18.2.0',
+        },
+        'react-dom': {
+          singleton: true,
+          requiredVersion: '^18.2.0',
+        },
+        'react-router': {
+          singleton: true,
+          requiredVersion: '^7.1.1',
+        },
+        'react-hook-form': {
+          singleton: true,
+          requiredVersion: '^7.54.2',
+        },
+        'lucide-react': {
+          singleton: true,
+          requiredVersion: '^0.471.0',
+        },
+        "react-toastify": { 
+          singleton: true, 
+          eager: true 
+        },
+      },
+
     }),
     new rspack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
@@ -116,3 +145,6 @@ module.exports = {
     isDev ? new refreshPlugin() : null,
   ].filter(Boolean),
 }
+
+
+

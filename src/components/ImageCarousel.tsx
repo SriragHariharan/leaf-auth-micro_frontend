@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
 
+import '../index.scss'
+import { ToastContainer } from 'react-toastify';
+
 const destinations = [
   {
     url: "https://images.unsplash.com/photo-1589308078059-be1415eab4c3",
@@ -19,7 +22,7 @@ const destinations = [
   }
 ];
 
-export const ImageCarousel = () => {
+const ImageCarousel = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
@@ -34,6 +37,7 @@ export const ImageCarousel = () => {
 
   return (
     <div className="relative h-full w-full overflow-hidden">
+      <ToastContainer />
       {destinations.map((destination, index) => (
         <div
           key={index}
@@ -53,3 +57,5 @@ export const ImageCarousel = () => {
     </div>
   );
 };
+
+export default ImageCarousel;

@@ -1,12 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import { Leaf } from 'lucide-react';
 import { useForm } from 'react-hook-form';
+import axios from 'axios';
+import { LEAF_AX_TOKEN, LEAF_BACKEND_URL, LEAF_USER_ID } from '../constants/constants';
+import { showErrorToast } from '../helpers/toastify';
+import { useNavigate } from 'react-router';
+
+import '../index.scss'
+import { ToastContainer } from 'react-toastify';
 
 interface FormData {
   otp: string;
 }
 
-export const OtpForm = () => {
+const OtpForm = () => {
   const {
     register,
     handleSubmit,
@@ -19,6 +26,8 @@ export const OtpForm = () => {
 
   const [timeLeft, setTimeLeft] = useState<number>(0);
   const [timerInterval, setTimerInterval] = useState<NodeJS.Timeout | null>(null); // Store interval ID
+
+  const navigate = useNavigate();
 
   // Function to format the time left in mm:ss format
   const formatTime = (time: number) => {
@@ -65,11 +74,25 @@ export const OtpForm = () => {
   }, []);
 
   const onSubmit = (data: FormData) => {
-    console.log(data);
+    let userID = localStorage.getItem(LEAF_USER_ID)
+    axios.post( LEAF_BACKEND_URL + "/user/auth/confirm-otp", { ...data, userID } )
+    .then(resp => {
+      localStorage.setItem(LEAF_AX_TOKEN, resp?.data?.data?.token)
+      console.log(resp);
+      navigate("/profile")
+    })
+    .catch(err => showErrorToast(err?.response?.data?.error?.message))
   };
+
+  const resendOtpRequest = () => {
+    axios.post( LEAF_BACKEND_URL + "/user/auth/resend-otp" )
+    .then(resp => console.log(resp))
+    .catch(err => showErrorToast(err?.response?.data?.error?.message))
+  }
 
   // Resend OTP logic
   const resendOtp = (): void => {
+    resendOtpRequest();
     const currentTime = Date.now();
     localStorage.setItem('otpTimerStart', currentTime.toString()); // Update the stored time
     setTimeLeft(3000); // Reset the timer to 5 minutes (300000ms)
@@ -83,6 +106,7 @@ export const OtpForm = () => {
 
   return (
     <div className="h-full w-full flex flex-col justify-center items-center px-8 lg:px-16">
+      <ToastContainer />
       <div className="w-full max-w-md">
         <div className="flex items-center gap-2 mb-8">
           <Leaf className="h-8 w-8 text-green-600" />
@@ -145,3 +169,5 @@ export const OtpForm = () => {
     </div>
   );
 };
+
+export default OtpForm;

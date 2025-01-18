@@ -1,16 +1,32 @@
 import { Leaf } from 'lucide-react';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import zxcvbn from 'zxcvbn';
+
+import '../index.scss'
+import { ToastContainer } from 'react-toastify';
+import axios from 'axios';
+import { LEAF_BACKEND_URL } from '../constants/constants';
+import { showErrorToast, showSuccessToast } from '../helpers/toastify';
+import { useNavigate } from 'react-router';
 
 interface FormData {
   password: string;
   confirmPassword: string;
 }
 
-export const ResetPassword = () => {
+const ResetPassword = () => {
   const [passwordStrength, setPasswordStrength] = useState<string>('');
   const [passwordScore, setPasswordScore] = useState<number>(0);
+
+    const [token, setToken] = useState<string | null>(null);
+    const navigate = useNavigate();
+
+    useEffect(() => {
+      const params = new URLSearchParams(window.location.search); // Parse query string
+      const tokenParam = params.get('token'); // Extract the 'token' parameter
+      setToken(tokenParam); // Set the token value in state
+    }, []);
 
   const {
     register,
@@ -46,6 +62,17 @@ export const ResetPassword = () => {
 
   const onSubmit = (data: FormData) => {
     console.log(data);
+    axios.post(LEAF_BACKEND_URL + "/user/auth/reset-password", 
+      { ...data }, 
+      {
+        headers: {'Authorization': `Bearer ${token}` }
+      })
+      .then(res => {
+        navigate("/login")
+        showSuccessToast(res?.data?.message);
+      })
+      .catch(err => showErrorToast(err?.response?.data?.error?.message));
+
   };
 
   // Function to determine the strength level for display
@@ -68,6 +95,7 @@ export const ResetPassword = () => {
 
   return (
     <div className="h-full w-full flex flex-col justify-center items-center px-8 lg:px-16">
+      <ToastContainer />
       <div className="w-full max-w-md">
         <div className="flex items-center gap-2 mb-8">
           <Leaf className="h-8 w-8 text-green-600" />
@@ -138,3 +166,5 @@ export const ResetPassword = () => {
     </div>
   );
 };
+
+export default ResetPassword;

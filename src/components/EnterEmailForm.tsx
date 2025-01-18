@@ -1,13 +1,19 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Leaf } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { Link } from 'react-router';
+
+import '../index.scss'
+import { ToastContainer } from 'react-toastify';
+import axios from 'axios';
+import { LEAF_BACKEND_URL } from '../constants/constants';
+import { showErrorToast, showSuccessToast } from '../helpers/toastify';
 
 interface FormData {
   email: string;
 }
 
-export const EnterEmailForm = () => {
+const EnterEmailForm = () => {
   const {
     register,
     handleSubmit,
@@ -18,12 +24,17 @@ export const EnterEmailForm = () => {
     },
   });
 
+  const [infoMessage, setInfoMessage] = useState<string>("")
   const onSubmit = (data: FormData) => {
-    console.log(data);
+    axios.post(LEAF_BACKEND_URL + "/user/auth/confirm-email", {...data})
+    .then(resp => setInfoMessage(resp?.data?.message))
+    .catch(err => showErrorToast(err?.response?.data?.error?.message));
   };
+
 
   return (
     <div className="h-full w-full flex flex-col justify-center items-center px-8 lg:px-16">
+      <ToastContainer />
       <div className="w-full max-w-md">
         <div className="flex items-center gap-2 mb-8">
           <Leaf className="h-8 w-8 text-green-600" />
@@ -54,13 +65,19 @@ export const EnterEmailForm = () => {
             {errors.email && (
               <p className="mt-1 text-sm text-red-500">{errors.email.message}</p>
             )}
+
+            {
+              infoMessage && (
+                <p className="mt-1 text-sm text-green-700">{infoMessage}</p>
+              )
+            }
           </div>
 
           <button
             type="submit"
             className="w-full rounded-md bg-green-600 py-2 px-4 text-white font-medium hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
           >
-            Request OTP
+            Get Reset Link
           </button>
         </form>
 
@@ -74,3 +91,5 @@ export const EnterEmailForm = () => {
     </div>
   );
 };
+
+export default EnterEmailForm;
