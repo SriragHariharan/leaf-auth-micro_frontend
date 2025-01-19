@@ -15,6 +15,11 @@ interface FormData {
 import '../index.scss'
 import { ToastContainer } from 'react-toastify';
 
+const useGlobalStore = async () => {
+  const { default: globalStore } = await import('hostApp/GlobalStore'); // Import the Zustand store
+  return globalStore;
+};
+
 const LoginForm = () => {
   const {
     register,
@@ -30,11 +35,25 @@ const LoginForm = () => {
 
   const navigate = useNavigate();
 
-  const onSubmit = (data: FormData) => {
+  
+
+  const onSubmit = async (data: FormData) => {
+    const globalStore = await useGlobalStore(); //zustand from host app
+
     axios.post( LEAF_BACKEND_URL + "/user/auth/login", { ...data } )
     .then(resp => {
-      localStorage.setItem(LEAF_AX_TOKEN, resp?.data?.data?.accessToken );
-      localStorage.setItem(LEAF_RF_TOKEN, resp?.data?.data?.refreshToken );
+      const { accessToken, refreshToken } = resp?.data?.data;
+      // Save tokens in localStorage
+      localStorage.setItem(LEAF_AX_TOKEN, accessToken);
+      localStorage.setItem(LEAF_RF_TOKEN, refreshToken);
+
+      // Update Zustand store
+      console.log("Setting values to zustand")
+      globalStore.getState().setAccessToken(accessToken);
+      globalStore.getState().setRefreshToken(refreshToken);
+      console.log(globalStore.getState());
+      console.log("Setting successfull to zustand")
+
       navigate("/");
     })
     .catch(err => {

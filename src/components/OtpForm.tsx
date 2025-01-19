@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Leaf } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
-import { LEAF_AX_TOKEN, LEAF_BACKEND_URL, LEAF_USER_ID } from '../constants/constants';
+import { LEAF_AX_TOKEN, LEAF_BACKEND_URL, LEAF_RF_TOKEN, LEAF_USER_ID } from '../constants/constants';
 import { showErrorToast } from '../helpers/toastify';
 import { useNavigate } from 'react-router';
 
@@ -34,6 +34,11 @@ const OtpForm = () => {
     const minutes = Math.floor(time / 60000);
     const seconds = Math.floor((time % 60000) / 1000);
     return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+  };
+
+  const useGlobalStore = async () => {
+    const { default: globalStore } = await import('hostApp/GlobalStore'); // Import the Zustand store
+    return globalStore;
   };
 
   // Initialize the timer
@@ -73,13 +78,21 @@ const OtpForm = () => {
     };
   }, []);
 
-  const onSubmit = (data: FormData) => {
+  const onSubmit = async(data: FormData) => {
     let userID = localStorage.getItem(LEAF_USER_ID)
+    const globalStore = await useGlobalStore();
+
     axios.post( LEAF_BACKEND_URL + "/user/auth/confirm-otp", { ...data, userID } )
     .then(resp => {
-      localStorage.setItem(LEAF_AX_TOKEN, resp?.data?.data?.token)
-      console.log(resp);
-      navigate("/profile")
+      const { accessToken, refreshToken } = resp?.data?.data;
+      // Save tokens in localStorage
+      localStorage.setItem(LEAF_AX_TOKEN, accessToken);
+      localStorage.setItem(LEAF_RF_TOKEN, refreshToken);
+
+      // Update Zustand store
+      globalStore.getState().setAccessToken(accessToken);
+      globalStore.getState().setRefreshToken(refreshToken);
+      navigate("/");
     })
     .catch(err => showErrorToast(err?.response?.data?.error?.message))
   };

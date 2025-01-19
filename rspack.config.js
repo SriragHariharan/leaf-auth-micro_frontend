@@ -107,6 +107,9 @@ module.exports = {
         "./OtpForm": "./src/components/OtpForm.tsx",
         "./ResetPassword": "./src/components/ResetPassword.tsx",
       },
+      remotes: {
+        hostApp: "host@http://localhost:8000/remoteEntry.js"
+      },
       shared: {
         react: {
           singleton: true,

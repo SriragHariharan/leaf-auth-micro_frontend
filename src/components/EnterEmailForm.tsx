@@ -7,7 +7,7 @@ import '../index.scss'
 import { ToastContainer } from 'react-toastify';
 import axios from 'axios';
 import { LEAF_BACKEND_URL } from '../constants/constants';
-import { showErrorToast, showSuccessToast } from '../helpers/toastify';
+import { showErrorToast } from '../helpers/toastify';
 
 interface FormData {
   email: string;
