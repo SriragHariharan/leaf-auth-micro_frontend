@@ -2,11 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { Leaf } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
-import { LEAF_AX_TOKEN, LEAF_BACKEND_URL, LEAF_RF_TOKEN, LEAF_USER_ID } from '../constants/constants';
-import { showErrorToast } from '../helpers/toastify';
+import { LEAF_BACKEND_URL, LEAF_USER_ID, OTP_TIMER_INTERVAL } from '../constants/constants';
+import { showErrorToast, showSuccessToast } from '../helpers/toastify';
 import { useNavigate } from 'react-router';
 
-import '../index.scss'
+import '../index.scss';
 import { ToastContainer } from 'react-toastify';
 
 interface FormData {
@@ -26,6 +26,7 @@ const OtpForm = () => {
 
   const [timeLeft, setTimeLeft] = useState<number>(0);
   const [timerInterval, setTimerInterval] = useState<NodeJS.Timeout | null>(null); // Store interval ID
+  const [loading, setLoading] = useState<boolean>(false); // Create loading state
 
   const navigate = useNavigate();
 
@@ -59,11 +60,11 @@ const OtpForm = () => {
     const storedTime = localStorage.getItem('otpTimerStart');
     const currentTime = Date.now();
 
-    let initialTime = 3000; // Default to 5 minutes (300000ms)
+    let initialTime = OTP_TIMER_INTERVAL; // Default to 5 minutes (300000ms)
 
     if (storedTime) {
       const timeElapsed = currentTime - Number(storedTime);
-      initialTime = Math.max(0, 3000 - timeElapsed); // Calculate remaining time
+      initialTime = Math.max(0, OTP_TIMER_INTERVAL - timeElapsed); // Calculate remaining time
     } else {
       localStorage.setItem('otpTimerStart', currentTime.toString()); // Start a new timer if it doesn't exist
     }
@@ -79,42 +80,48 @@ const OtpForm = () => {
   }, []);
 
   const onSubmit = async(data: FormData) => {
-    let userID = localStorage.getItem(LEAF_USER_ID)
+    setLoading(true);
+    const userID = localStorage.getItem(LEAF_USER_ID);
     const globalStore = await useGlobalStore();
 
-    axios.post( LEAF_BACKEND_URL + "/user/auth/confirm-otp", { ...data, userID } )
-    .then(resp => {
-      const { accessToken, refreshToken } = resp?.data?.data;
-      // Save tokens in localStorage
-      localStorage.setItem(LEAF_AX_TOKEN, accessToken);
-      localStorage.setItem(LEAF_RF_TOKEN, refreshToken);
-
-      // Update Zustand store
-      globalStore.getState().setAccessToken(accessToken);
-      globalStore.getState().setRefreshToken(refreshToken);
-      navigate("/");
-    })
-    .catch(err => showErrorToast(err?.response?.data?.error?.message))
+    axios.post(LEAF_BACKEND_URL + "/user/auth/confirm-otp", { ...data, userID })
+      .then(resp => {
+        localStorage.clear();
+        const { accessToken, refreshToken } = resp.data?.data?.token; // Update here from server and decode and share
+        // Update Zustand store
+        globalStore.getState().setAccessToken(accessToken);
+        globalStore.getState().setRefreshToken(refreshToken);
+        navigate("/");
+      })
+      .catch(err => showErrorToast(err?.response?.data?.error?.message))
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
-  const resendOtpRequest = () => {
-    axios.post( LEAF_BACKEND_URL + "/user/auth/resend-otp" )
-    .then(resp => console.log(resp))
-    .catch(err => showErrorToast(err?.response?.data?.error?.message))
-  }
+  const resendOtpRequest = async () => {
+    const userID = localStorage.getItem(LEAF_USER_ID);
+    try {
+        const resp = await axios.post(LEAF_BACKEND_URL + "/user/auth/resend-otp", { userID });
+        console.log(resp.data); // Log the response for debugging
+        showSuccessToast("OTP has been resent to your email."); // Notify user
+    } catch (err) {
+        showErrorToast(err.response?.data?.error?.message);
+    }
+  };
 
   // Resend OTP logic
   const resendOtp = (): void => {
     resendOtpRequest();
     const currentTime = Date.now();
     localStorage.setItem('otpTimerStart', currentTime.toString()); // Update the stored time
-    setTimeLeft(3000); // Reset the timer to 5 minutes (300000ms)
+    setTimeLeft(OTP_TIMER_INTERVAL); // Reset the timer to 5 minutes (300000ms)
 
     if (timerInterval) {
       clearInterval(timerInterval); // Clear existing interval before starting a new one
     }
 
-    startTimer(3000); // Start the timer again from 5 minutes
+    startTimer(OTP_TIMER_INTERVAL); // Start the timer again from 5 minutes
   };
 
   return (
@@ -154,9 +161,10 @@ const OtpForm = () => {
 
           <button
             type="submit"
-            className="w-full rounded-md bg-green-600 py-2 px-4 text-white font-medium hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
+            className={`w-full rounded-md py-2 px-4 text-white font-medium focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 ${loading ? 'bg-gray-400' : 'bg-green-600 hover:bg-green-700'}`}
+            disabled={loading} // Disable the button while loading
           >
-            Submit OTP
+            {loading ? 'Submitting...' : 'Submit OTP'} {/* Change button text based on loading state */}
           </button>
         </form>
 
@@ -168,7 +176,7 @@ const OtpForm = () => {
         {timeLeft <= 0 && (
           <p className="mt-8 text-center text-sm text-gray-600">
             Didn’t receive an OTP?{' '}
-            <span onClick={resendOtp} className="font-medium text-green-600 hover:text-green-500">
+            <span onClick={resendOtp} className="font-medium text-green-600 hover:text-green-500 cursor-pointer">
               Resend OTP
             </span>
           </p>

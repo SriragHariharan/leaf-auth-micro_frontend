@@ -5,20 +5,12 @@ import { ToastContainer } from 'react-toastify';
 
 const destinations = [
   {
-    url: "https://images.unsplash.com/photo-1589308078059-be1415eab4c3",
-    location: "Santorini, Greece"
+    url: "https://plus.unsplash.com/premium_photo-1694542947673-9e1c61387343?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    location: "Macchu Picchu, Peru"
   },
   {
-    url: "https://images.unsplash.com/photo-1544644181-1484b3fdfc62",
-    location: "Bali, Indonesia"
-  },
-  {
-    url: "https://images.unsplash.com/photo-1493246507139-91e8fad9978e",
-    location: "Machu Picchu, Peru"
-  },
-  {
-    url: "https://images.unsplash.com/photo-1516483638261-f4dbaf036963",
-    location: "Venice, Italy"
+    url: "https://images.unsplash.com/photo-1523617613878-90b8be6ed7a0?q=80&w=1867&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    location: "Edinburgh, Scotland"
   }
 ];
 

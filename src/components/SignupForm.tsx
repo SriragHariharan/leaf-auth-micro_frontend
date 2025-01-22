@@ -3,7 +3,6 @@ import { Leaf } from 'lucide-react';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router';
-import zxcvbn from 'zxcvbn';
 import { GOOGLE_OAUTH_CLIENT_ID, LEAF_BACKEND_URL, LEAF_USER_ID } from '../constants/constants';
 import { showErrorToast } from '../helpers/toastify';
 
@@ -20,8 +19,7 @@ interface FormData {
 }
 
 const SignupForm = () => {
-  const [passwordStrength, setPasswordStrength] = useState<string>('');
-  const [passwordScore, setPasswordScore] = useState<number>(0);
+  const [loading, setLoading] = useState(false); // Create loading state
   const navigate = useNavigate();
 
   const {
@@ -40,15 +38,6 @@ const SignupForm = () => {
 
   const password = watch('password');
 
-  // Handle password strength
-  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const password = e.target.value;
-    const result = zxcvbn(password);
-
-    setPasswordStrength(result.feedback.suggestions.join(' '));
-    setPasswordScore(result.score);
-  };
-
   // Validate confirm password
   const validateConfirmPassword = (value: string) => {
     // Check if password matches confirmPassword
@@ -58,44 +47,30 @@ const SignupForm = () => {
     return true;  // Return true if passwords match
   };
 
-  //submit data to backend service
+  // Submit data to backend service
   const onSubmit = (data: FormData) => {
-    axios.post( LEAF_BACKEND_URL + "/user/auth/signup", { ...data } )
-    .then(resp => {
-      localStorage.setItem(LEAF_USER_ID, resp?.data?.data?.userID)
-      navigate("/confirm-otp");
-    })
-    .catch(err => showErrorToast(err?.response?.data?.error?.message))
-  };
-
-  // Function to determine the strength level for display
-  const getStrengthLabel = (score: number): string => {
-    switch (score) {
-      case 0:
-        return 'Very Weak';
-      case 1:
-        return 'Weak';
-      case 2:
-        return 'Fair';
-      case 3:
-        return 'Strong';
-      case 4:
-        return 'Very Strong';
-      default:
-        return '';
-    }
+    setLoading(true); // Set loading to true when the signup process starts
+    axios.post(LEAF_BACKEND_URL + "/user/auth/signup", { ...data })
+      .then(resp => {
+        localStorage.setItem(LEAF_USER_ID, resp?.data?.data?.userID);
+        navigate("/confirm-otp");
+      })
+      .catch(err => showErrorToast(err?.response?.data?.error?.message))
+      .finally(() => {
+        setLoading(false); // Set loading to false when the process is complete
+      });
   };
 
   /* handle oauth signup */
+  const useGlobalStore = async () => {
+    const { default: globalStore } = await import('hostApp/GlobalStore'); // Import the Zustand store
+    return globalStore;
+  };
 
-    const useGlobalStore = async () => {
-      const { default: globalStore } = await import('hostApp/GlobalStore'); // Import the Zustand store
-      return globalStore;
-    };
-    const handleOauthSignup = async(data:Object) => {
-      const globalStore = await useGlobalStore(); 
+  const handleOauthSignup = async(data:Object) => {
+    const globalStore = await useGlobalStore(); 
 
-      axios.post(LEAF_BACKEND_URL + "/user/auth/oauth-signup", { ...data })
+    axios.post(LEAF_BACKEND_URL + "/user/auth/oauth-signup", { ...data })
       .then(resp => {
         const { accessToken, refreshToken } = resp?.data?.data;
         // Update Zustand store
@@ -105,7 +80,7 @@ const SignupForm = () => {
         navigate("/");
       })
       .catch(err => showErrorToast(err?.response?.data?.error?.message));
-    }
+  }
 
   return (
     <GoogleOAuthProvider clientId={GOOGLE_OAUTH_CLIENT_ID}>
@@ -166,7 +141,6 @@ const SignupForm = () => {
                   required: 'Password is required',
                   minLength: { value: 6, message: 'Password must be at least 6 characters' },
                 })}
-                onChange={handlePasswordChange}
                 className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500"
               />
               {errors.password && <p className="mt-1 text-sm text-red-500">{errors.password.message}</p>}
@@ -189,23 +163,12 @@ const SignupForm = () => {
               {errors.confirmPassword && <p className="mt-1 text-sm text-red-500">{errors.confirmPassword.message}</p>}
             </div>
 
-            {/* Password Strength Meter */}
-            <div className="mt-2">
-              <p className="text-sm text-gray-600">Password Strength: {getStrengthLabel(passwordScore)}</p>
-              <div className="w-full h-1 mt-1 bg-gray-200">
-                <div
-                  className={`h-full ${passwordScore === 0 ? 'bg-red-600' : passwordScore === 1 ? 'bg-yellow-500' : passwordScore === 2 ? 'bg-orange-400' : passwordScore === 3 ? 'bg-green-400' : 'bg-green-600'}`}
-                  style={{ width: `${(passwordScore / 4) * 100}%` }}
-                />
-              </div>
-              {passwordStrength && <p className="text-sm text-gray-500 mt-1">{passwordStrength}</p>}
-            </div>
-
             <button
               type="submit"
-              className="w-full rounded-md bg-green-600 py-2 px-4 text-white font-medium hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
+              className={`w-full rounded-md py-2 px-4 text-white font-medium focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 ${loading ? 'bg-gray-400' : 'bg-green-600 hover:bg-green-700'}`}
+              disabled={loading} // Disable the button while loading
             >
-              Sign up
+              {loading ? 'Signing up...' : 'Sign up'} {/* Change button text based on loading state */}
             </button>
           </form>
 
@@ -216,19 +179,19 @@ const SignupForm = () => {
             </Link>
           </p>
 
-          {/* google login */}
+          {/* Google login */}
           <hr className='my-4' />
           <div className="mt-4 flex justify-center items-center">
-              <GoogleLogin
-                onSuccess={credentialResponse => {
-                  const jsonData = jwtDecode(credentialResponse?.credential!)
-                  console.log(jsonData);
-                  handleOauthSignup({...jsonData, provider: "google"})
-                }}
-                onError={() => {
-                  console.log('Login Failed');
-                }}
-              />
+            <GoogleLogin
+              onSuccess={credentialResponse => {
+                const jsonData = jwtDecode(credentialResponse?.credential!)
+                console.log(jsonData);
+                handleOauthSignup({...jsonData, provider: "google"})
+              }}
+              onError={() => {
+                console.log('Login Failed');
+              }}
+            />
           </div>
         </div>
       </div>

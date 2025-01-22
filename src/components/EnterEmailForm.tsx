@@ -3,7 +3,7 @@ import { Leaf } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { Link } from 'react-router';
 
-import '../index.scss'
+import '../index.scss';
 import { ToastContainer } from 'react-toastify';
 import axios from 'axios';
 import { LEAF_BACKEND_URL } from '../constants/constants';
@@ -24,13 +24,20 @@ const EnterEmailForm = () => {
     },
   });
 
-  const [infoMessage, setInfoMessage] = useState<string>("")
-  const onSubmit = (data: FormData) => {
-    axios.post(LEAF_BACKEND_URL + "/user/auth/confirm-email", {...data})
-    .then(resp => setInfoMessage(resp?.data?.message))
-    .catch(err => showErrorToast(err?.response?.data?.error?.message));
-  };
+  const [infoMessage, setInfoMessage] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false); // Create loading state
 
+  const onSubmit = (data: FormData) => {
+    setLoading(true); // Set loading to true when the request starts
+    axios.post(LEAF_BACKEND_URL + "/user/auth/confirm-email", { ...data })
+      .then(resp => {
+        setInfoMessage(resp?.data?.message);
+      })
+      .catch(err => showErrorToast(err?.response?.data?.error?.message))
+      .finally(() => {
+        setLoading(false); // Set loading to false when the request is complete
+      });
+  };
 
   return (
     <div className="h-full w-full flex flex-col justify-center items-center px-8 lg:px-16">
@@ -66,18 +73,17 @@ const EnterEmailForm = () => {
               <p className="mt-1 text-sm text-red-500">{errors.email.message}</p>
             )}
 
-            {
-              infoMessage && (
-                <p className="mt-1 text-sm text-green-700">{infoMessage}</p>
-              )
-            }
+            {infoMessage && (
+              <p className="mt-1 text-sm text-green-700">{infoMessage}</p>
+            )}
           </div>
 
           <button
             type="submit"
-            className="w-full rounded-md bg-green-600 py-2 px-4 text-white font-medium hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
+            className={`w-full rounded-md py-2 px-4 text-white font-medium focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 ${loading ? 'bg-gray-400' : 'bg-green-600 hover:bg-green-700'}`}
+            disabled={loading} // Disable the button while loading
           >
-            Get Reset Link
+            {loading ? 'Sending...' : 'Get Reset Link'} {/* Change button text based on loading state */}
           </button>
         </form>
 
