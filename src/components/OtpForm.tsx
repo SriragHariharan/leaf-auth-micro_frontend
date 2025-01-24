@@ -86,11 +86,13 @@ const OtpForm = () => {
 
     axios.post(LEAF_BACKEND_URL + "/user/auth/confirm-otp", { ...data, userID })
       .then(resp => {
+        const { accessToken, refreshToken, username, profilePicture } = resp?.data?.data;
         localStorage.clear();
-        const { accessToken, refreshToken } = resp.data?.data?.token; // Update here from server and decode and share
         // Update Zustand store
         globalStore.getState().setAccessToken(accessToken);
         globalStore.getState().setRefreshToken(refreshToken);
+        globalStore.getState().setUsername(username);
+        globalStore.getState().setProfilePic(profilePicture);
         navigate("/");
       })
       .catch(err => showErrorToast(err?.response?.data?.error?.message))

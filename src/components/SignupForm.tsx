@@ -72,11 +72,12 @@ const SignupForm = () => {
 
     axios.post(LEAF_BACKEND_URL + "/user/auth/oauth-signup", { ...data })
       .then(resp => {
-        const { accessToken, refreshToken } = resp?.data?.data;
+        const { accessToken, refreshToken, username, profilePicture } = resp?.data?.data;
         // Update Zustand store
         globalStore.getState().setAccessToken(accessToken);
         globalStore.getState().setRefreshToken(refreshToken);
-        console.log(globalStore.getState(), " ::: state");
+        globalStore.getState().setUsername(username);
+        globalStore.getState().setProfilePic(profilePicture);
         navigate("/");
       })
       .catch(err => showErrorToast(err?.response?.data?.error?.message));
