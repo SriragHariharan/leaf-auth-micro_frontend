@@ -9,13 +9,12 @@ import LoginForm  from './components/LoginForm';
 import SignupForm from './components/SignupForm';
 import EnterEmailForm from './components/EnterEmailForm';
 import ResetPassword from './components/ResetPassword';
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { Toaster } from 'react-hot-toast';
 
 
 const App = () => (
     <Router>
-      <ToastContainer />
+      <Toaster position="top-center" reverseOrder={false} />
       <div className="h-screen w-screen flex">
         <div className="hidden lg:block w-1/2 h-full">
           <ImageCarousel />

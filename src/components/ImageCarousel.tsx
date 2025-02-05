@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 import '../index.scss'
-import { ToastContainer } from 'react-toastify';
+import { Toaster } from 'react-hot-toast';
 
 const destinations = [
   {
@@ -29,7 +29,7 @@ const ImageCarousel = () => {
 
   return (
     <div className="relative h-full w-full overflow-hidden">
-      <ToastContainer />
+      <Toaster position="top-center" reverseOrder={false} />
       {destinations.map((destination, index) => (
         <div
           key={index}

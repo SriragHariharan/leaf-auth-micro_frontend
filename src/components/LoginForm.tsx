@@ -15,7 +15,7 @@ interface FormData {
 }
 
 import '../index.scss'
-import { ToastContainer } from 'react-toastify';
+import { Toaster } from 'react-hot-toast';
 
 const useGlobalStore = async () => {
   const { default: globalStore } = await import('hostApp/GlobalStore'); // Import the Zustand store
@@ -80,7 +80,7 @@ const LoginForm = () => {
   return (
     <GoogleOAuthProvider clientId={GOOGLE_OAUTH_CLIENT_ID}>
       <div className="h-full w-full flex flex-col justify-center items-center px-8 lg:px-16">
-        <ToastContainer />
+        <Toaster position="top-center" reverseOrder={false} />
         <div className="w-full max-w-md">
           <div className="flex items-center gap-2 mb-8">
             <Leaf className="h-8 w-8 text-green-600" />

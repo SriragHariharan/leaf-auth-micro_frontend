@@ -7,7 +7,7 @@ import { showErrorToast, showSuccessToast } from '../helpers/toastify';
 import { useNavigate } from 'react-router';
 
 import '../index.scss';
-import { ToastContainer } from 'react-toastify';
+import { Toaster } from 'react-hot-toast';
 
 interface FormData {
   otp: string;
@@ -128,7 +128,7 @@ const OtpForm = () => {
 
   return (
     <div className="h-full w-full flex flex-col justify-center items-center px-8 lg:px-16">
-      <ToastContainer />
+      <Toaster position="top-center" reverseOrder={false} />
       <div className="w-full max-w-md">
         <div className="flex items-center gap-2 mb-8">
           <Leaf className="h-8 w-8 text-green-600" />

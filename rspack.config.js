@@ -106,6 +106,7 @@ module.exports = {
         "./EmailForm": "./src/components/EnterEmailForm.tsx",
         "./OtpForm": "./src/components/OtpForm.tsx",
         "./ResetPassword": "./src/components/ResetPassword.tsx",
+        "./toastFunction": "./src/helpers/toastify.ts"
       },
       remotes: {
         hostApp: "host@http://localhost:8000/remoteEntry.js"
@@ -135,6 +136,10 @@ module.exports = {
           singleton: true, 
           eager: true 
         },
+        "react-hot-toast": {
+          singleton: true, 
+          eager: true
+        }
       },
 
     }),
