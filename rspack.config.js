@@ -109,7 +109,11 @@ module.exports = {
         "./toastFunction": "./src/helpers/toastify.ts"
       },
       remotes: {
-        hostApp: "host@http://localhost:8000/remoteEntry.js"
+        //dev environment
+        // hostApp: "host@http://localhost:8000/remoteEntry.js"
+
+        //prod environment
+        hostApp: "host@https://www.leaf.monster/remoteEntry.js"
       },
       shared: {
         react: {
