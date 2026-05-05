@@ -2,6 +2,7 @@ const rspack = require('@rspack/core')
 const refreshPlugin = require('@rspack/plugin-react-refresh')
 const isDev = process.env.NODE_ENV === 'development'
 const path = require('path');
+require('dotenv').config();
 
 const printCompilationMessage = require('./compilation.config.js');
 
@@ -109,11 +110,7 @@ module.exports = {
         "./toastFunction": "./src/helpers/toastify.ts"
       },
       remotes: {
-        //dev environment
-        // hostApp: "host@http://localhost:8000/remoteEntry.js"
-
-        //prod environment
-        hostApp: "host@https://www.leaf.monster/remoteEntry.js"
+        hostApp: `host@${process.env.VITE_HOST_REMOTE}`
       },
       shared: {
         react: {
@@ -149,6 +146,9 @@ module.exports = {
     }),
     new rspack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
+      'process.env.VITE_LEAF_BACKEND_URL': JSON.stringify(process.env.VITE_LEAF_BACKEND_URL),
+      'process.env.VITE_GOOGLE_OAUTH_CLIENT_ID': JSON.stringify(process.env.VITE_GOOGLE_OAUTH_CLIENT_ID),
+      'process.env.VITE_HOST_REMOTE': JSON.stringify(process.env.VITE_HOST_REMOTE),
     }),
     new rspack.ProgressPlugin({}),
     new rspack.HtmlRspackPlugin({

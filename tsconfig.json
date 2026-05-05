@@ -3,6 +3,7 @@
     "target": "ES6", // Specify ECMAScript target version
     "outDir": "dist",
     "lib": ["dom", "dom.iterable", "esnext"], // List of library files to be included in the compilation
+    "types": ["node"], // Include Node.js types for process.env
     "allowJs": true, // Allow JavaScript files to be compiled
     "skipLibCheck": true, // Skip type checking of all declaration files
     "esModuleInterop": true, // Disables namespace imports (import * as fs from "fs") and enables CJS/AMD/UMD style imports (import fs from "fs")
@@ -10,7 +11,7 @@
     "strict": true, // Enable all strict type checking options
     "forceConsistentCasingInFileNames": true, // Disallow inconsistently-cased references to the same file.
     "module": "esnext", // Specify module code generation
-    "moduleResolution": "node", // Resolve modules using Node.js style
+    "moduleResolution": "bundler", // Resolve modules using Node.js style
     "isolatedModules": true, // Unconditionally emit imports for unresolved files
     "resolveJsonModule": true, // Include modules imported with .json extension
     "noEmit": true, // Do not emit output (meaning do not compile code, only perform type checking)
@@ -23,7 +24,7 @@
     "noFallthroughCasesInSwitch": true // Report errors for fallthrough cases in switch statement
   },
   "include": [
-    "src/**/*" // *** The files TypeScript should type check ***
-, "src/components/SignupForm.tsx"  ],
+    "src/**/*", // *** The files TypeScript should type check ***
+    "src/components/SignupForm.tsx"  ],
   "exclude": ["node_modules", "build", "dist"]
 }
