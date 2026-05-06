@@ -17,3 +17,21 @@ declare module 'hostApp/GlobalStore' {
   const globalStore: import('zustand').Store<GlobalState>;  // Zustand store type
   export default globalStore;
 }
+
+declare module "hostApp/themeBootstrap" {
+  export const themeBootstrapReady: boolean;
+}
+
+declare module "hostApp/designRecipes" {
+  export const designRecipes: {
+    modalOverlay: string;
+    modalContainer: string;
+    modalHeader: string;
+    inputBase: string;
+    inputError: string;
+    buttonPrimary: string;
+    buttonSecondary: string;
+    iconButton: string;
+    panel: string;
+  };
+}

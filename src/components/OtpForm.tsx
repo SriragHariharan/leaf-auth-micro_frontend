@@ -7,8 +7,8 @@ import { showErrorToast, showSuccessToast } from '../helpers/toastify';
 import { useNavigate } from 'react-router';
 
 import '../index.scss';
-import { Toaster } from 'react-hot-toast';
 import AuthBrand from './AuthBrand';
+import { designRecipes } from 'hostApp/designRecipes';
 
 interface FormData {
   otp: string;
@@ -127,38 +127,35 @@ const OtpForm = () => {
     startTimer(); // Start the timer again from 5 minutes
   };
 
-  const inputBase =
-    "peer h-11 w-full rounded-xl border border-transparent bg-gray-100/70 pl-10 pr-3 text-[15px] text-gray-900 placeholder:text-gray-400 hover:bg-gray-100 focus:bg-white focus:border-green-500 focus:ring-4 focus:ring-green-500/10 focus:outline-none transition";
-  const inputError =
-    "border-red-300 bg-red-50/40 hover:bg-red-50/60 focus:border-red-400 focus:ring-red-500/10";
+  const inputBase = `${designRecipes.inputBase} peer h-11 border-transparent pl-10 pr-3 text-base`;
+  const inputError = designRecipes.inputError;
 
   return (
     <div className="relative h-full w-full flex flex-col justify-center items-center px-8 lg:px-16 overflow-hidden">
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute -top-24 -right-24 h-72 w-72 rounded-full bg-green-100/50 blur-3xl"
+        className="pointer-events-none absolute -top-24 -right-24 h-72 w-72 rounded-full bg-ds-brand-100/50 blur-3xl"
       />
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute -bottom-32 -left-20 h-80 w-80 rounded-full bg-emerald-100/40 blur-3xl"
+        className="pointer-events-none absolute -bottom-32 -left-20 h-80 w-80 rounded-full bg-ds-brand-50/70 blur-3xl"
       />
-      <Toaster position="top-center" reverseOrder={false} />
       <div className="relative w-full max-w-md">
         <AuthBrand className="mb-10" />
 
-        <h2 className="text-3xl font-semibold tracking-tight text-gray-900">Enter the OTP</h2>
-        <p className="mt-2 text-gray-500">
+        <h2 className="text-3xl font-semibold tracking-tight text-ds-text-primary">Enter the OTP</h2>
+        <p className="mt-2 text-ds-text-muted">
           We sent an OTP to your email address. Please enter it below to continue.
         </p>
 
         <form onSubmit={handleSubmit(onSubmit)} className="mt-8 space-y-5">
           {/* OTP Field */}
           <div>
-            <label htmlFor="otp" className="mb-1.5 block text-sm font-medium text-gray-700">
+            <label htmlFor="otp" className="mb-1.5 block text-sm font-medium text-ds-text-secondary">
               OTP
             </label>
             <div className="relative">
-              <KeyRound className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 peer-focus:text-green-600 transition-colors" />
+              <KeyRound className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-ds-text-muted peer-focus:text-ds-brand-600 transition-colors" />
               <input
                 id="otp"
                 type="text"
@@ -170,11 +167,11 @@ const OtpForm = () => {
                     message: 'OTP must be 6 digits',
                   },
                 })}
-                className={`${inputBase} ${errors.otp ? inputError : ''} text-center font-medium tracking-[0.4em]`}
+                className={`${inputBase} ${errors.otp ? inputError : ''} text-center font-medium tracking-[0.3em]`}
               />
             </div>
             {errors.otp && (
-              <p className="mt-1.5 flex items-center gap-1 text-xs text-red-600">
+              <p className="mt-1.5 flex items-center gap-1 text-xs text-ds-state-danger">
                 <AlertCircle className="h-3.5 w-3.5" />
                 {errors.otp.message}
               </p>
@@ -183,7 +180,7 @@ const OtpForm = () => {
 
           <div className="flex justify-start">
             <span
-              className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium ring-1 ring-inset ${timeLeft <= 0 ? 'bg-red-50 text-red-700 ring-red-200' : 'bg-green-50 text-green-700 ring-green-200'}`}
+              className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium ring-1 ring-inset ${timeLeft <= 0 ? 'bg-ds-state-dangerSoft text-ds-state-danger ring-ds-state-danger/30' : 'bg-ds-state-successSoft text-ds-state-success ring-ds-brand-100'}`}
             >
               <Clock3 className="h-3.5 w-3.5" />
               {timeLeft <= 0 ? 'OTP expired' : `Time left ${formatTime(timeLeft)}`}
@@ -192,7 +189,7 @@ const OtpForm = () => {
 
           <button
             type="submit"
-            className={`flex h-11 w-full items-center justify-center gap-2 rounded-xl px-4 text-sm font-semibold text-white shadow-lg shadow-green-600/20 transition focus:outline-none focus:ring-4 focus:ring-green-500/30 active:scale-[0.99] ${loading ? 'bg-gray-400 cursor-not-allowed shadow-none' : 'bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700'}`}
+            className={`${designRecipes.buttonPrimary} flex h-11 w-full items-center justify-center gap-2 px-4 shadow-dsBrand active:scale-[0.99] ${loading ? 'cursor-not-allowed shadow-none' : ''}`}
             disabled={loading}
           >
             {loading ? (
@@ -206,16 +203,16 @@ const OtpForm = () => {
           </button>
         </form>
 
-        <p className="mt-6 flex items-start gap-2 rounded-xl bg-amber-50 p-3 text-xs text-amber-700 ring-1 ring-inset ring-amber-100">
+        <p className="mt-6 flex items-start gap-2 rounded-xl bg-ds-state-warningSoft p-3 text-xs text-ds-state-warning ring-1 ring-inset ring-ds-state-warning/30">
           <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" />
           Do not refresh the page. Refreshing might cause the OTP to expire.
         </p>
 
         {/* Resend OTP button */}
         {timeLeft <= 0 && (
-          <p className="mt-8 text-center text-sm text-gray-600">
+          <p className="mt-8 text-center text-sm text-ds-text-secondary">
             Didn’t receive an OTP?{' '}
-            <span onClick={resendOtp} className="cursor-pointer font-medium text-green-600 hover:text-green-700 hover:underline">
+            <span onClick={resendOtp} className="cursor-pointer font-medium text-ds-brand-600 hover:text-ds-brand-700 hover:underline">
               Resend OTP
             </span>
           </p>

@@ -1,6 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { BrowserRouter as Router, Routes, Route } from 'react-router';
+import 'hostApp/themeBootstrap';
 
 import './index.scss'
 import ImageCarousel from './components/ImageCarousel'
@@ -19,7 +20,7 @@ const App = () => (
         <div className="hidden lg:block w-1/2 h-full">
           <ImageCarousel />
         </div>
-        <div className="w-full lg:w-1/2 h-full bg-white">
+        <div className="w-full lg:w-1/2 h-full bg-ds-surface-card">
           <Routes>
               <Route path="/login" element={<LoginForm />} />
               <Route path="/signup" element={<SignupForm />} />

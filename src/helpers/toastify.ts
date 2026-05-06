@@ -7,8 +7,8 @@ export function showSuccessToast(message: string): void {
     position: 'top-right',      // Position at top-right corner
     duration: 5000,            // Auto close after 5 seconds
     style: {
-      backgroundColor: '#2f343a', // Dark theme background
-      color: '#ffffff', // Dark theme text color
+      backgroundColor: 'var(--ds-color-text-primary)',
+      color: 'var(--ds-color-text-inverse)',
     },
   });
 }
@@ -18,8 +18,8 @@ export function showErrorToast(message: string): void {
     position: 'top-right',      // Position at top-right corner
     duration: 5000,            // Auto close after 5 seconds
     style: {
-      backgroundColor: '#2f343a', // Dark theme background
-      color: '#ffffff', // Dark theme text color
+      backgroundColor: 'var(--ds-color-text-primary)',
+      color: 'var(--ds-color-text-inverse)',
     },
   });
 }

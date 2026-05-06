@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 import '../index.scss'
-import { Toaster } from 'react-hot-toast';
+import { designRecipes } from 'hostApp/designRecipes';
 
 const destinations = [
   {
@@ -28,8 +28,7 @@ const ImageCarousel = () => {
   }, []);
 
   return (
-    <div className="relative h-full w-full overflow-hidden">
-      <Toaster position="top-center" reverseOrder={false} />
+    <div className={`${designRecipes.panel} relative h-full w-full overflow-hidden border-0 shadow-none`}>
       {destinations.map((destination, index) => (
         <div
           key={index}
@@ -41,7 +40,7 @@ const ImageCarousel = () => {
             alt={destination.location}
             className="h-full w-full object-cover"
           />
-          <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-6">
+          <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-ds-text-primary/70 to-transparent p-6">
             <h3 className="text-white text-2xl font-semibold">{destination.location}</h3>
           </div>
         </div>

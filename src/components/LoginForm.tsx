@@ -15,8 +15,8 @@ interface FormData {
 }
 
 import '../index.scss'
-import { Toaster } from 'react-hot-toast';
 import AuthBrand from './AuthBrand';
+import { designRecipes } from 'hostApp/designRecipes';
 
 const useGlobalStore = async () => {
   const { default: globalStore } = await import('hostApp/GlobalStore'); // Import the Zustand store
@@ -78,39 +78,36 @@ const LoginForm = () => {
   };
 
   const inputBase =
-    "peer h-11 w-full rounded-xl border border-transparent bg-gray-100/70 pl-10 pr-3 text-[15px] text-gray-900 placeholder:text-gray-400 hover:bg-gray-100 focus:bg-white focus:border-green-500 focus:ring-4 focus:ring-green-500/10 focus:outline-none transition";
-  const inputError =
-    "border-red-300 bg-red-50/40 hover:bg-red-50/60 focus:border-red-400 focus:ring-red-500/10";
+    `${designRecipes.inputBase} peer h-11 border-transparent pl-10 pr-3 text-base`;
+  const inputError = designRecipes.inputError;
 
   return (
     <GoogleOAuthProvider clientId={GOOGLE_OAUTH_CLIENT_ID || ''}>
       <div className="relative h-full w-full flex flex-col justify-center items-center px-8 lg:px-16 overflow-hidden">
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute -top-24 -right-24 h-72 w-72 rounded-full bg-green-100/50 blur-3xl"
+          className="pointer-events-none absolute -top-24 -right-24 h-72 w-72 rounded-full bg-ds-brand-100/50 blur-3xl"
         />
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute -bottom-32 -left-20 h-80 w-80 rounded-full bg-emerald-100/40 blur-3xl"
+          className="pointer-events-none absolute -bottom-32 -left-20 h-80 w-80 rounded-full bg-ds-brand-50/70 blur-3xl"
         />
-
-        <Toaster position="top-center" reverseOrder={false} />
 
         <div className="relative w-full max-w-md">
           <AuthBrand className="mb-10" />
 
           {/* Heading */}
-          <h2 className="text-3xl font-semibold tracking-tight text-gray-900">Welcome back</h2>
-          <p className="mt-2 text-gray-500">Please enter your details to sign in</p>
+          <h2 className="text-3xl font-semibold tracking-tight text-ds-text-primary">Welcome back</h2>
+          <p className="mt-2 text-ds-text-muted">Please enter your details to sign in</p>
 
           <form onSubmit={handleSubmit(onSubmit)} className="mt-8 space-y-5">
             {/* Email */}
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1.5">
+              <label htmlFor="email" className="block text-sm font-medium text-ds-text-secondary mb-1.5">
                 Email
               </label>
               <div className="relative">
-                <Mail className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 peer-focus:text-green-600 transition-colors" />
+                <Mail className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-ds-text-muted peer-focus:text-ds-brand-600 transition-colors" />
                 <input
                   id="email"
                   type="email"
@@ -126,7 +123,7 @@ const LoginForm = () => {
                 />
               </div>
               {errors.email && (
-                <p className="mt-1.5 flex items-center gap-1 text-xs text-red-600">
+                <p className="mt-1.5 flex items-center gap-1 text-xs text-ds-state-danger">
                   <AlertCircle className="h-3.5 w-3.5" />
                   {errors.email.message}
                 </p>
@@ -135,11 +132,11 @@ const LoginForm = () => {
 
             {/* Password */}
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1.5">
+              <label htmlFor="password" className="block text-sm font-medium text-ds-text-secondary mb-1.5">
                 Password
               </label>
               <div className="relative">
-                <Lock className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 peer-focus:text-green-600 transition-colors" />
+                <Lock className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-ds-text-muted peer-focus:text-ds-brand-600 transition-colors" />
                 <input
                   id="password"
                   type={showPwd ? 'text' : 'password'}
@@ -153,7 +150,7 @@ const LoginForm = () => {
                 <button
                   type="button"
                   onClick={() => setShowPwd((v) => !v)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-ds-text-muted hover:text-ds-text-secondary transition-colors"
                   aria-label={showPwd ? 'Hide password' : 'Show password'}
                   tabIndex={-1}
                 >
@@ -161,7 +158,7 @@ const LoginForm = () => {
                 </button>
               </div>
               {errors.password && (
-                <p className="mt-1.5 flex items-center gap-1 text-xs text-red-600">
+                <p className="mt-1.5 flex items-center gap-1 text-xs text-ds-state-danger">
                   <AlertCircle className="h-3.5 w-3.5" />
                   {errors.password.message}
                 </p>
@@ -171,7 +168,7 @@ const LoginForm = () => {
             <div className="flex justify-end">
               <Link
                 to="/confirm-email"
-                className="text-sm font-medium text-green-600 hover:text-green-700 hover:underline"
+                className="text-sm font-medium text-ds-brand-600 hover:text-ds-brand-700 hover:underline"
               >
                 Forgot password?
               </Link>
@@ -180,10 +177,10 @@ const LoginForm = () => {
             <button
               type="submit"
               disabled={loading}
-              className={`flex h-11 w-full items-center justify-center gap-2 rounded-xl px-4 text-sm font-semibold text-white shadow-lg shadow-green-600/20 transition focus:outline-none focus:ring-4 focus:ring-green-500/30 active:scale-[0.99] ${
+              className={`${designRecipes.buttonPrimary} flex h-11 w-full items-center justify-center gap-2 px-4 shadow-dsBrand active:scale-[0.99] ${
                 loading
-                  ? 'bg-gray-400 cursor-not-allowed shadow-none'
-                  : 'bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700'
+                  ? 'cursor-not-allowed shadow-none'
+                  : ''
               }`}
             >
               {loading ? (
@@ -199,11 +196,11 @@ const LoginForm = () => {
 
           {/* Divider */}
           <div className="my-6 flex items-center gap-4">
-            <div className="h-px flex-1 bg-gray-200" />
-            <span className="text-xs font-medium uppercase tracking-wider text-gray-400">
+            <div className="h-px flex-1 bg-ds-border-subtle" />
+            <span className="text-xs font-medium uppercase tracking-wider text-ds-text-muted">
               or continue with
             </span>
-            <div className="h-px flex-1 bg-gray-200" />
+            <div className="h-px flex-1 bg-ds-border-subtle" />
           </div>
 
           {/* Google */}
@@ -225,9 +222,9 @@ const LoginForm = () => {
             />
           </div>
 
-          <p className="mt-8 text-center text-sm text-gray-600">
+          <p className="mt-8 text-center text-sm text-ds-text-secondary">
             Don't have an account?{' '}
-            <Link to="/signup" className="font-medium text-green-600 hover:text-green-700 hover:underline">
+            <Link to="/signup" className="font-medium text-ds-brand-600 hover:text-ds-brand-700 hover:underline">
               Sign up
             </Link>
           </p>

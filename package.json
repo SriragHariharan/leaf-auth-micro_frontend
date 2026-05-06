@@ -4,7 +4,8 @@
   "scripts": {
     "build": "rspack build",
     "build:start": "cd dist && rspack serve",
-    "start": "rspack serve"
+    "start": "rspack serve",
+    "check:design-system": "rg -n --glob \"*.{ts,tsx,js,jsx,scss,css}\" \"(#[0-9A-Fa-f]{3,8}|text-(gray|red|green|blue|amber|slate)-|bg-(gray|red|green|blue|amber|slate)-)\" src"
   },
   "license": "MIT",
   "author": {
