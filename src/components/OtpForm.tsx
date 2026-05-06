@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Leaf } from 'lucide-react';
+import { KeyRound, Loader2, AlertCircle, AlertTriangle, Clock3 } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
 import { LEAF_BACKEND_URL, LEAF_USER_ID, OTP_TIMER_INTERVAL } from '../constants/constants';
@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router';
 
 import '../index.scss';
 import { Toaster } from 'react-hot-toast';
+import AuthBrand from './AuthBrand';
 
 interface FormData {
   otp: string;
@@ -43,7 +44,7 @@ const OtpForm = () => {
   };
 
   // Initialize the timer
-  const startTimer = (startTime: number) => {
+  const startTimer = () => {
     const interval = setInterval(() => {
       setTimeLeft((prevTime) => {
         if (prevTime <= 0) {
@@ -70,7 +71,7 @@ const OtpForm = () => {
     }
 
     setTimeLeft(initialTime);  // Set initial time left
-    startTimer(initialTime);  // Start the timer with initial time
+    startTimer();  // Start the timer with initial time
 
     return () => {
       if (timerInterval) {
@@ -107,8 +108,8 @@ const OtpForm = () => {
         const resp = await axios.post(LEAF_BACKEND_URL + "/user/auth/resend-otp", { userID });
         console.log(resp.data); // Log the response for debugging
         showSuccessToast("OTP has been resent to your email."); // Notify user
-    } catch (err) {
-        showErrorToast(err.response?.data?.error?.message);
+    } catch (err: any) {
+        showErrorToast(err?.response?.data?.error?.message);
     }
   };
 
@@ -123,54 +124,90 @@ const OtpForm = () => {
       clearInterval(timerInterval); // Clear existing interval before starting a new one
     }
 
-    startTimer(OTP_TIMER_INTERVAL); // Start the timer again from 5 minutes
+    startTimer(); // Start the timer again from 5 minutes
   };
 
-  return (
-    <div className="h-full w-full flex flex-col justify-center items-center px-8 lg:px-16">
-      <Toaster position="top-center" reverseOrder={false} />
-      <div className="w-full max-w-md">
-        <div className="flex items-center gap-2 mb-8">
-          <Leaf className="h-8 w-8 text-green-600" />
-          <h1 className="text-3xl font-bold text-gray-900">leaf</h1>
-        </div>
+  const inputBase =
+    "peer h-11 w-full rounded-xl border border-transparent bg-gray-100/70 pl-10 pr-3 text-[15px] text-gray-900 placeholder:text-gray-400 hover:bg-gray-100 focus:bg-white focus:border-green-500 focus:ring-4 focus:ring-green-500/10 focus:outline-none transition";
+  const inputError =
+    "border-red-300 bg-red-50/40 hover:bg-red-50/60 focus:border-red-400 focus:ring-red-500/10";
 
-        <h2 className="text-2xl font-semibold text-gray-900 mb-2">Enter the OTP</h2>
-        <p className="text-gray-600 mb-8">
+  return (
+    <div className="relative h-full w-full flex flex-col justify-center items-center px-8 lg:px-16 overflow-hidden">
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute -top-24 -right-24 h-72 w-72 rounded-full bg-green-100/50 blur-3xl"
+      />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute -bottom-32 -left-20 h-80 w-80 rounded-full bg-emerald-100/40 blur-3xl"
+      />
+      <Toaster position="top-center" reverseOrder={false} />
+      <div className="relative w-full max-w-md">
+        <AuthBrand className="mb-10" />
+
+        <h2 className="text-3xl font-semibold tracking-tight text-gray-900">Enter the OTP</h2>
+        <p className="mt-2 text-gray-500">
           We sent an OTP to your email address. Please enter it below to continue.
         </p>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+        <form onSubmit={handleSubmit(onSubmit)} className="mt-8 space-y-5">
           {/* OTP Field */}
           <div>
-            <label htmlFor="otp" className="block text-sm font-medium text-gray-700">
+            <label htmlFor="otp" className="mb-1.5 block text-sm font-medium text-gray-700">
               OTP
             </label>
-            <input
-              id="otp"
-              type="text"
-              {...register('otp', {
-                required: 'OTP is required',
-                pattern: {
-                  value: /^[0-9]{6}$/, // Assuming OTP is a 6-digit number
-                  message: 'OTP must be 6 digits',
-                },
-              })}
-              className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500"
-            />
-            {errors.otp && <p className="mt-1 text-sm text-red-500">{errors.otp.message}</p>}
+            <div className="relative">
+              <KeyRound className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 peer-focus:text-green-600 transition-colors" />
+              <input
+                id="otp"
+                type="text"
+                placeholder="000000"
+                {...register('otp', {
+                  required: 'OTP is required',
+                  pattern: {
+                    value: /^[0-9]{6}$/, // Assuming OTP is a 6-digit number
+                    message: 'OTP must be 6 digits',
+                  },
+                })}
+                className={`${inputBase} ${errors.otp ? inputError : ''} text-center font-medium tracking-[0.4em]`}
+              />
+            </div>
+            {errors.otp && (
+              <p className="mt-1.5 flex items-center gap-1 text-xs text-red-600">
+                <AlertCircle className="h-3.5 w-3.5" />
+                {errors.otp.message}
+              </p>
+            )}
+          </div>
+
+          <div className="flex justify-start">
+            <span
+              className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium ring-1 ring-inset ${timeLeft <= 0 ? 'bg-red-50 text-red-700 ring-red-200' : 'bg-green-50 text-green-700 ring-green-200'}`}
+            >
+              <Clock3 className="h-3.5 w-3.5" />
+              {timeLeft <= 0 ? 'OTP expired' : `Time left ${formatTime(timeLeft)}`}
+            </span>
           </div>
 
           <button
             type="submit"
-            className={`w-full rounded-md py-2 px-4 text-white font-medium focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 ${loading ? 'bg-gray-400' : 'bg-green-600 hover:bg-green-700'}`}
-            disabled={loading} // Disable the button while loading
+            className={`flex h-11 w-full items-center justify-center gap-2 rounded-xl px-4 text-sm font-semibold text-white shadow-lg shadow-green-600/20 transition focus:outline-none focus:ring-4 focus:ring-green-500/30 active:scale-[0.99] ${loading ? 'bg-gray-400 cursor-not-allowed shadow-none' : 'bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700'}`}
+            disabled={loading}
           >
-            {loading ? 'Submitting...' : 'Submit OTP'} {/* Change button text based on loading state */}
+            {loading ? (
+              <>
+                <Loader2 className="h-4 w-4 animate-spin" />
+                Submitting...
+              </>
+            ) : (
+              'Submit OTP'
+            )}
           </button>
         </form>
 
-        <p className="mt-8 text-center text-sm text-red-500 font-semibold">
+        <p className="mt-6 flex items-start gap-2 rounded-xl bg-amber-50 p-3 text-xs text-amber-700 ring-1 ring-inset ring-amber-100">
+          <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" />
           Do not refresh the page. Refreshing might cause the OTP to expire.
         </p>
 
@@ -178,16 +215,11 @@ const OtpForm = () => {
         {timeLeft <= 0 && (
           <p className="mt-8 text-center text-sm text-gray-600">
             Didn’t receive an OTP?{' '}
-            <span onClick={resendOtp} className="font-medium text-green-600 hover:text-green-500 cursor-pointer">
+            <span onClick={resendOtp} className="cursor-pointer font-medium text-green-600 hover:text-green-700 hover:underline">
               Resend OTP
             </span>
           </p>
         )}
-
-        {/* Timer Display */}
-        <div className="absolute bottom-8 right-8 text-xs md:text-xl font-semibold text-gray-800 bg-green-300 p-4 rounded-full">
-          <p>Time Left: {formatTime(timeLeft)}</p>
-        </div>
       </div>
     </div>
   );
