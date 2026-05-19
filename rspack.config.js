@@ -6,6 +6,8 @@ require('dotenv').config();
 
 const printCompilationMessage = require('./compilation.config.js');
 
+const port = 8081;
+
 /**
  * @type {import('@rspack/cli').Configuration}
  */
@@ -14,9 +16,13 @@ module.exports = {
   entry: {
     main: './src/index.ts',
   },
+
+  output: {
+    publicPath: isDev ? `http://localhost:${port}/` : 'https://auth.leaf.monster/',
+  },
   
   devServer: {
-    port: 8081,
+    port,
     historyApiFallback: true,
     watchFiles: [path.resolve(__dirname, 'src')],
     onListening: function (devServer) {
