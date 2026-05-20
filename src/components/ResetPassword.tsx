@@ -15,16 +15,16 @@ interface FormData {
 }
 
 const ResetPassword = () => {
-  const [loading, setLoading] = useState<boolean>(false); // Create loading state
+  const [loading, setLoading] = useState<boolean>(false);
   const [token, setToken] = useState<string | null>(null);
   const [showPwd, setShowPwd] = useState(false);
   const [showConfirmPwd, setShowConfirmPwd] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search); // Parse query string
-    const tokenParam = params.get('token'); // Extract the 'token' parameter
-    setToken(tokenParam); // Set the token value in state
+    const params = new URLSearchParams(window.location.search);
+    const tokenParam = params.get('token');
+    setToken(tokenParam);
   }, []);
 
   const {
@@ -39,18 +39,16 @@ const ResetPassword = () => {
     },
   });
 
-  // Validate confirm password
   const validateConfirmPassword = (value: string) => {
     const password = watch('password');
-    // Check if password matches confirmPassword
     if (value !== password) {
-      return 'Passwords do not match';  // Return error message
+      return 'Passwords do not match';
     }
-    return true;  // Return true if passwords match
+    return true;
   };
 
   const onSubmit = (data: FormData) => {
-    setLoading(true); // Set loading to true when the request starts
+    setLoading(true);
     axios.post(authUrl(AUTH_PATHS.resetPassword), 
       { ...data }, 
       {
@@ -62,34 +60,23 @@ const ResetPassword = () => {
       })
       .catch(err => showErrorToast(err?.response?.data?.error?.message))
       .finally(() => {
-        setLoading(false); // Set loading to false when the request is complete
+        setLoading(false);
       });
   };
 
-  const inputBase = `${designRecipes.inputBase} peer h-11 border-transparent pl-10 pr-3 text-base`;
-  const inputError = designRecipes.inputError;
-
   return (
-    <div className="relative h-full w-full flex flex-col justify-center items-center px-8 lg:px-16 overflow-hidden">
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute -top-24 -right-24 h-72 w-72 rounded-full bg-ds-brand-100/50 blur-3xl"
-      />
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute -bottom-32 -left-20 h-80 w-80 rounded-full bg-ds-brand-50/70 blur-3xl"
-      />
-      <div className="relative w-full max-w-md">
+    <div className={designRecipes.authFormShell}>
+      <div aria-hidden="true" className={designRecipes.authDecorBlurTop} />
+      <div aria-hidden="true" className={designRecipes.authDecorBlurBottom} />
+      <div className={designRecipes.authFormContent}>
         <AuthBrand className="mb-10" />
 
         <h2 className="text-3xl font-semibold tracking-tight text-ds-text-primary">Reset your password</h2>
         <p className="mt-2 text-ds-text-muted">Please enter a new password for your account</p>
 
         <form onSubmit={handleSubmit(onSubmit)} className="mt-8 space-y-5">
-
-          {/* Password Field */}
           <div>
-            <label htmlFor="password" className="mb-1.5 block text-sm font-medium text-ds-text-secondary">
+            <label htmlFor="password" className={designRecipes.formLabel}>
               New Password
             </label>
             <div className="relative">
@@ -102,7 +89,7 @@ const ResetPassword = () => {
                   required: 'Password is required',
                   minLength: { value: 6, message: 'Password must be at least 6 characters' },
                 })}
-                className={`${inputBase} pr-10 ${errors.password ? inputError : ''}`}
+                className={`peer ${designRecipes.inputWithIcon} pr-10 ${errors.password ? designRecipes.inputError : ''}`}
               />
               <button
                 type="button"
@@ -115,16 +102,15 @@ const ResetPassword = () => {
               </button>
             </div>
             {errors.password && (
-              <p className="mt-1.5 flex items-center gap-1 text-xs text-ds-state-danger">
+              <p className={designRecipes.formError}>
                 <AlertCircle className="h-3.5 w-3.5" />
                 {errors.password.message}
               </p>
             )}
           </div>
 
-          {/* Confirm Password Field */}
           <div>
-            <label htmlFor="confirmPassword" className="mb-1.5 block text-sm font-medium text-ds-text-secondary">
+            <label htmlFor="confirmPassword" className={designRecipes.formLabel}>
               Confirm New Password
             </label>
             <div className="relative">
@@ -135,9 +121,9 @@ const ResetPassword = () => {
                 placeholder="Re-enter your new password"
                 {...register('confirmPassword', {
                   required: 'Confirm password is required',
-                  validate: validateConfirmPassword, // Custom validation for matching passwords
+                  validate: validateConfirmPassword,
                 })}
-                className={`${inputBase} pr-10 ${errors.confirmPassword ? inputError : ''}`}
+                className={`peer ${designRecipes.inputWithIcon} pr-10 ${errors.confirmPassword ? designRecipes.inputError : ''}`}
               />
               <button
                 type="button"
@@ -150,18 +136,14 @@ const ResetPassword = () => {
               </button>
             </div>
             {errors.confirmPassword && (
-              <p className="mt-1.5 flex items-center gap-1 text-xs text-ds-state-danger">
+              <p className={designRecipes.formError}>
                 <AlertCircle className="h-3.5 w-3.5" />
                 {errors.confirmPassword.message}
               </p>
             )}
           </div>
 
-          <button
-            type="submit"
-            className={`${designRecipes.buttonPrimary} flex h-11 w-full items-center justify-center gap-2 px-4 shadow-dsBrand active:scale-[0.99] ${loading ? 'cursor-not-allowed shadow-none' : ''}`}
-            disabled={loading}
-          >
+          <button type="submit" className={designRecipes.buttonSubmitFull} disabled={loading}>
             {loading ? (
               <>
                 <Loader2 className="h-4 w-4 animate-spin" />

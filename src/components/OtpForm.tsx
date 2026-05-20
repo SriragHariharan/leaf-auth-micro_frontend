@@ -26,12 +26,11 @@ const OtpForm = () => {
   });
 
   const [timeLeft, setTimeLeft] = useState<number>(0);
-  const [timerInterval, setTimerInterval] = useState<NodeJS.Timeout | null>(null); // Store interval ID
-  const [loading, setLoading] = useState<boolean>(false); // Create loading state
+  const [timerInterval, setTimerInterval] = useState<NodeJS.Timeout | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const navigate = useNavigate();
 
-  // Function to format the time left in mm:ss format
   const formatTime = (time: number) => {
     const minutes = Math.floor(time / 60000);
     const seconds = Math.floor((time % 60000) / 1000);
@@ -39,11 +38,10 @@ const OtpForm = () => {
   };
 
   const useGlobalStore = async () => {
-    const { default: globalStore } = await import('hostApp/GlobalStore'); // Import the Zustand store
+    const { default: globalStore } = await import('hostApp/GlobalStore');
     return globalStore;
   };
 
-  // Initialize the timer
   const startTimer = () => {
     const interval = setInterval(() => {
       setTimeLeft((prevTime) => {
@@ -51,31 +49,31 @@ const OtpForm = () => {
           clearInterval(interval);
           return 0;
         }
-        return prevTime - 1000; // Decrease the time by 1 second
+        return prevTime - 1000;
       });
     }, 1000);
-    setTimerInterval(interval); // Store the interval
+    setTimerInterval(interval);
   };
 
   useEffect(() => {
     const storedTime = localStorage.getItem('otpTimerStart');
     const currentTime = Date.now();
 
-    let initialTime = OTP_TIMER_INTERVAL; // Default to 5 minutes (300000ms)
+    let initialTime = OTP_TIMER_INTERVAL;
 
     if (storedTime) {
       const timeElapsed = currentTime - Number(storedTime);
-      initialTime = Math.max(0, OTP_TIMER_INTERVAL - timeElapsed); // Calculate remaining time
+      initialTime = Math.max(0, OTP_TIMER_INTERVAL - timeElapsed);
     } else {
-      localStorage.setItem('otpTimerStart', currentTime.toString()); // Start a new timer if it doesn't exist
+      localStorage.setItem('otpTimerStart', currentTime.toString());
     }
 
-    setTimeLeft(initialTime);  // Set initial time left
-    startTimer();  // Start the timer with initial time
+    setTimeLeft(initialTime);
+    startTimer();
 
     return () => {
       if (timerInterval) {
-        clearInterval(timerInterval); // Cleanup on component unmount
+        clearInterval(timerInterval);
       }
     };
   }, []);
@@ -89,7 +87,6 @@ const OtpForm = () => {
       .then(resp => {
         const { accessToken, refreshToken, username, profilePicture } = resp?.data?.data;
         localStorage.clear();
-        // Update Zustand store
         globalStore.getState().setAccessToken(accessToken);
         globalStore.getState().setRefreshToken(refreshToken);
         globalStore.getState().setUsername(username);
@@ -106,41 +103,31 @@ const OtpForm = () => {
     const userID = localStorage.getItem(LEAF_USER_ID);
     try {
         const resp = await axios.post(authUrl(AUTH_PATHS.resendOtp), { userID });
-        console.log(resp.data); // Log the response for debugging
-        showSuccessToast("OTP has been resent to your email."); // Notify user
+        console.log(resp.data);
+        showSuccessToast("OTP has been resent to your email.");
     } catch (err: any) {
         showErrorToast(err?.response?.data?.error?.message);
     }
   };
 
-  // Resend OTP logic
   const resendOtp = (): void => {
     resendOtpRequest();
     const currentTime = Date.now();
-    localStorage.setItem('otpTimerStart', currentTime.toString()); // Update the stored time
-    setTimeLeft(OTP_TIMER_INTERVAL); // Reset the timer to 5 minutes (300000ms)
+    localStorage.setItem('otpTimerStart', currentTime.toString());
+    setTimeLeft(OTP_TIMER_INTERVAL);
 
     if (timerInterval) {
-      clearInterval(timerInterval); // Clear existing interval before starting a new one
+      clearInterval(timerInterval);
     }
 
-    startTimer(); // Start the timer again from 5 minutes
+    startTimer();
   };
 
-  const inputBase = `${designRecipes.inputBase} peer h-11 border-transparent pl-10 pr-3 text-base`;
-  const inputError = designRecipes.inputError;
-
   return (
-    <div className="relative h-full w-full flex flex-col justify-center items-center px-8 lg:px-16 overflow-hidden">
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute -top-24 -right-24 h-72 w-72 rounded-full bg-ds-brand-100/50 blur-3xl"
-      />
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute -bottom-32 -left-20 h-80 w-80 rounded-full bg-ds-brand-50/70 blur-3xl"
-      />
-      <div className="relative w-full max-w-md">
+    <div className={designRecipes.authFormShell}>
+      <div aria-hidden="true" className={designRecipes.authDecorBlurTop} />
+      <div aria-hidden="true" className={designRecipes.authDecorBlurBottom} />
+      <div className={designRecipes.authFormContent}>
         <AuthBrand className="mb-10" />
 
         <h2 className="text-3xl font-semibold tracking-tight text-ds-text-primary">Enter the OTP</h2>
@@ -149,9 +136,8 @@ const OtpForm = () => {
         </p>
 
         <form onSubmit={handleSubmit(onSubmit)} className="mt-8 space-y-5">
-          {/* OTP Field */}
           <div>
-            <label htmlFor="otp" className="mb-1.5 block text-sm font-medium text-ds-text-secondary">
+            <label htmlFor="otp" className={designRecipes.formLabel}>
               OTP
             </label>
             <div className="relative">
@@ -163,15 +149,15 @@ const OtpForm = () => {
                 {...register('otp', {
                   required: 'OTP is required',
                   pattern: {
-                    value: /^[0-9]{6}$/, // Assuming OTP is a 6-digit number
+                    value: /^[0-9]{6}$/,
                     message: 'OTP must be 6 digits',
                   },
                 })}
-                className={`${inputBase} ${errors.otp ? inputError : ''} text-center font-medium tracking-[0.3em]`}
+                className={`peer ${designRecipes.inputWithIcon} ${errors.otp ? designRecipes.inputError : ''} text-center font-medium tracking-[0.3em]`}
               />
             </div>
             {errors.otp && (
-              <p className="mt-1.5 flex items-center gap-1 text-xs text-ds-state-danger">
+              <p className={designRecipes.formError}>
                 <AlertCircle className="h-3.5 w-3.5" />
                 {errors.otp.message}
               </p>
@@ -187,11 +173,7 @@ const OtpForm = () => {
             </span>
           </div>
 
-          <button
-            type="submit"
-            className={`${designRecipes.buttonPrimary} flex h-11 w-full items-center justify-center gap-2 px-4 shadow-dsBrand active:scale-[0.99] ${loading ? 'cursor-not-allowed shadow-none' : ''}`}
-            disabled={loading}
-          >
+          <button type="submit" className={designRecipes.buttonSubmitFull} disabled={loading}>
             {loading ? (
               <>
                 <Loader2 className="h-4 w-4 animate-spin" />
@@ -208,11 +190,10 @@ const OtpForm = () => {
           Do not refresh the page. Refreshing might cause the OTP to expire.
         </p>
 
-        {/* Resend OTP button */}
         {timeLeft <= 0 && (
           <p className="mt-8 text-center text-sm text-ds-text-secondary">
             Didn’t receive an OTP?{' '}
-            <span onClick={resendOtp} className="cursor-pointer font-medium text-ds-brand-600 hover:text-ds-brand-700 hover:underline">
+            <span onClick={resendOtp} className={`cursor-pointer ${designRecipes.linkBrand}`}>
               Resend OTP
             </span>
           </p>

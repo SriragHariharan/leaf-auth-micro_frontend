@@ -11,16 +11,17 @@ import SignupForm from './components/SignupForm';
 import EnterEmailForm from './components/EnterEmailForm';
 import ResetPassword from './components/ResetPassword';
 import { Toaster, toastOptions } from 'hostApp/toast';
+import { designRecipes } from 'hostApp/designRecipes';
 
 
 const App = () => (
     <Router>
       <Toaster position={toastOptions.position} toastOptions={{ duration: toastOptions.duration }} />
-      <div className="h-screen w-screen flex">
-        <div className="hidden lg:block w-1/2 h-full">
+      <div className={designRecipes.authSplitLayout}>
+        <div className={designRecipes.authSplitCarouselCol}>
           <ImageCarousel />
         </div>
-        <div className="w-full lg:w-1/2 h-full bg-ds-surface-card">
+        <div className={designRecipes.authSplitFormCol}>
           <Routes>
               <Route path="/login" element={<LoginForm />} />
               <Route path="/signup" element={<SignupForm />} />

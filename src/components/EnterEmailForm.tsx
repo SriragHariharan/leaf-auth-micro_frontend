@@ -26,43 +26,33 @@ const EnterEmailForm = () => {
   });
 
   const [infoMessage, setInfoMessage] = useState<string>("");
-  const [loading, setLoading] = useState<boolean>(false); // Create loading state
+  const [loading, setLoading] = useState<boolean>(false);
 
   const onSubmit = (data: FormData) => {
-    setLoading(true); // Set loading to true when the request starts
+    setLoading(true);
     axios.post(authUrl(AUTH_PATHS.confirmEmail), { ...data })
       .then(resp => {
         setInfoMessage(resp?.data?.message);
       })
       .catch(err => showErrorToast(err?.response?.data?.error?.message))
       .finally(() => {
-        setLoading(false); // Set loading to false when the request is complete
+        setLoading(false);
       });
   };
 
-  const inputBase = `${designRecipes.inputBase} peer h-11 border-transparent pl-10 pr-3 text-base`;
-  const inputError = designRecipes.inputError;
-
   return (
-    <div className="relative h-full w-full flex flex-col justify-center items-center px-8 lg:px-16 overflow-hidden">
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute -top-24 -right-24 h-72 w-72 rounded-full bg-ds-brand-100/50 blur-3xl"
-      />
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute -bottom-32 -left-20 h-80 w-80 rounded-full bg-ds-brand-50/70 blur-3xl"
-      />
-      <div className="relative w-full max-w-md">
+    <div className={designRecipes.authFormShell}>
+      <div aria-hidden="true" className={designRecipes.authDecorBlurTop} />
+      <div aria-hidden="true" className={designRecipes.authDecorBlurBottom} />
+      <div className={designRecipes.authFormContent}>
         <AuthBrand className="mb-10" />
 
         <h2 className="text-3xl font-semibold tracking-tight text-ds-text-primary">Forgot your password?</h2>
         <p className="mt-2 text-ds-text-muted">Enter your email to receive a password reset link</p>
 
         <form onSubmit={handleSubmit(onSubmit)} className="mt-8 space-y-5">
-          {/* Email Field */}
           <div>
-            <label htmlFor="email" className="mb-1.5 block text-sm font-medium text-ds-text-secondary">
+            <label htmlFor="email" className={designRecipes.formLabel}>
               Email
             </label>
             <div className="relative">
@@ -78,11 +68,11 @@ const EnterEmailForm = () => {
                     message: 'Invalid email address',
                   },
                 })}
-                className={`${inputBase} ${errors.email ? inputError : ''}`}
+                className={`peer ${designRecipes.inputWithIcon} ${errors.email ? designRecipes.inputError : ''}`}
               />
             </div>
             {errors.email && (
-              <p className="mt-1.5 flex items-center gap-1 text-xs text-ds-state-danger">
+              <p className={designRecipes.formError}>
                 <AlertCircle className="h-3.5 w-3.5" />
                 {errors.email.message}
               </p>
@@ -96,11 +86,7 @@ const EnterEmailForm = () => {
             )}
           </div>
 
-          <button
-            type="submit"
-            disabled={loading}
-            className={`${designRecipes.buttonPrimary} flex h-11 w-full items-center justify-center gap-2 px-4 shadow-dsBrand active:scale-[0.99] ${loading ? 'cursor-not-allowed shadow-none' : ''}`}
-          >
+          <button type="submit" disabled={loading} className={designRecipes.buttonSubmitFull}>
             {loading ? (
               <>
                 <Loader2 className="h-4 w-4 animate-spin" />
@@ -114,7 +100,7 @@ const EnterEmailForm = () => {
 
         <p className="mt-8 text-center text-sm text-ds-text-secondary">
           Recollected your password?{' '}
-          <Link to="/login" className="font-medium text-ds-brand-600 hover:text-ds-brand-700 hover:underline">
+          <Link to="/login" className={designRecipes.linkBrand}>
             Click here
           </Link>
         </p>

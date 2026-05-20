@@ -69,23 +69,13 @@ const SignupForm = () => {
       .catch(err => showErrorToast(err?.response?.data?.error?.message));
   }
 
-  const inputBase =
-    `${designRecipes.inputBase} peer h-11 border-transparent pl-10 pr-3 text-base`;
-  const inputError = designRecipes.inputError;
-
   return (
     <GoogleOAuthProvider clientId={GOOGLE_OAUTH_CLIENT_ID || ''}>
-      <div className="relative h-full w-full flex flex-col justify-center items-center px-8 lg:px-16 py-10 overflow-hidden">
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute -top-24 -right-24 h-72 w-72 rounded-full bg-ds-brand-100/50 blur-3xl"
-        />
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute -bottom-32 -left-20 h-80 w-80 rounded-full bg-ds-brand-50/70 blur-3xl"
-        />
+      <div className={designRecipes.authFormShell}>
+        <div aria-hidden="true" className={designRecipes.authDecorBlurTop} />
+        <div aria-hidden="true" className={designRecipes.authDecorBlurBottom} />
 
-        <div className="relative w-full max-w-md">
+        <div className={designRecipes.authFormContent}>
           <AuthBrand className="mb-8" />
 
           {/* Heading */}
@@ -95,7 +85,7 @@ const SignupForm = () => {
           <form onSubmit={handleSubmit(onSubmit)} className="mt-8 space-y-5">
             {/* Username */}
             <div>
-              <label htmlFor="username" className="block text-sm font-medium text-ds-text-secondary mb-1.5">
+              <label htmlFor="username" className={designRecipes.formLabel}>
                 Username
               </label>
               <div className="relative">
@@ -105,11 +95,11 @@ const SignupForm = () => {
                   type="text"
                   placeholder="Choose a username"
                   {...register('username', { required: 'Username is required' })}
-                  className={`${inputBase} ${errors.username ? inputError : ''}`}
+                  className={`peer ${designRecipes.inputWithIcon} ${errors.username ? designRecipes.inputError : ''}`}
                 />
               </div>
               {errors.username && (
-                <p className="mt-1.5 flex items-center gap-1 text-xs text-ds-state-danger">
+                <p className={designRecipes.formError}>
                   <AlertCircle className="h-3.5 w-3.5" />
                   {errors.username.message}
                 </p>
@@ -118,7 +108,7 @@ const SignupForm = () => {
 
             {/* Email */}
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-ds-text-secondary mb-1.5">
+              <label htmlFor="email" className={designRecipes.formLabel}>
                 Email
               </label>
               <div className="relative">
@@ -134,11 +124,11 @@ const SignupForm = () => {
                       message: 'Invalid email address',
                     },
                   })}
-                  className={`${inputBase} ${errors.email ? inputError : ''}`}
+                  className={`peer ${designRecipes.inputWithIcon} ${errors.email ? designRecipes.inputError : ''}`}
                 />
               </div>
               {errors.email && (
-                <p className="mt-1.5 flex items-center gap-1 text-xs text-ds-state-danger">
+                <p className={designRecipes.formError}>
                   <AlertCircle className="h-3.5 w-3.5" />
                   {errors.email.message}
                 </p>
@@ -147,7 +137,7 @@ const SignupForm = () => {
 
             {/* Password */}
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-ds-text-secondary mb-1.5">
+              <label htmlFor="password" className={designRecipes.formLabel}>
                 Password
               </label>
               <div className="relative">
@@ -160,7 +150,7 @@ const SignupForm = () => {
                     required: 'Password is required',
                     minLength: { value: 6, message: 'Password must be at least 6 characters' },
                   })}
-                  className={`${inputBase} pr-10 ${errors.password ? inputError : ''}`}
+                  className={`peer ${designRecipes.inputWithIcon} pr-10 ${errors.password ? designRecipes.inputError : ''}`}
                 />
                 <button
                   type="button"
@@ -173,22 +163,14 @@ const SignupForm = () => {
                 </button>
               </div>
               {errors.password && (
-                <p className="mt-1.5 flex items-center gap-1 text-xs text-ds-state-danger">
+                <p className={designRecipes.formError}>
                   <AlertCircle className="h-3.5 w-3.5" />
                   {errors.password.message}
                 </p>
               )}
             </div>
 
-            <button
-              type="submit"
-              disabled={loading}
-              className={`${designRecipes.buttonPrimary} flex h-11 w-full items-center justify-center gap-2 px-4 shadow-dsBrand active:scale-[0.99] ${
-                loading
-                  ? 'cursor-not-allowed shadow-none'
-                  : ''
-              }`}
-            >
+            <button type="submit" disabled={loading} className={designRecipes.buttonSubmitFull}>
               {loading ? (
                 <>
                   <Loader2 className="h-4 w-4 animate-spin" />
@@ -200,13 +182,8 @@ const SignupForm = () => {
             </button>
           </form>
 
-          {/* Divider */}
-          <div className="my-6 flex items-center gap-4">
-            <div className="h-px flex-1 bg-ds-border-subtle" />
-            <span className="text-xs font-medium uppercase tracking-wider text-ds-text-muted">
-              or continue with
-            </span>
-            <div className="h-px flex-1 bg-ds-border-subtle" />
+          <div className={designRecipes.authDivider}>
+            <span>or continue with</span>
           </div>
 
           {/* Google */}
@@ -230,7 +207,7 @@ const SignupForm = () => {
 
           <p className="mt-8 text-center text-sm text-ds-text-secondary">
             Already a user?{' '}
-            <Link to="/login" className="font-medium text-ds-brand-600 hover:text-ds-brand-700 hover:underline">
+            <Link to="/login" className={designRecipes.linkBrand}>
               Sign in
             </Link>
           </p>
