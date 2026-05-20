@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router';
 import { GOOGLE_OAUTH_CLIENT_ID, LEAF_BACKEND_URL, LEAF_USER_ID } from '../constants/constants';
-import { showErrorToast } from '../helpers/toastify';
+import { showErrorToast } from 'hostApp/toast';
 
 import '../index.scss'
 import { GoogleLogin, GoogleOAuthProvider } from '@react-oauth/google';

@@ -112,8 +112,7 @@ module.exports = {
         "./ImageCarousel": "./src/components/ImageCarousel.tsx",
         "./EmailForm": "./src/components/EnterEmailForm.tsx",
         "./OtpForm": "./src/components/OtpForm.tsx",
-        "./ResetPassword": "./src/components/ResetPassword.tsx",
-        "./toastFunction": "./src/helpers/toastify.ts"
+        "./ResetPassword": "./src/components/ResetPassword.tsx"
       },
       remotes: {
         hostApp: `host@${process.env.VITE_HOST_REMOTE}`

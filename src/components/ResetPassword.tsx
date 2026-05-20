@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 import '../index.scss';
 import axios from 'axios';
 import { LEAF_BACKEND_URL } from '../constants/constants';
-import { showErrorToast, showSuccessToast } from '../helpers/toastify';
+import { showErrorToast, showSuccessToast } from 'hostApp/toast';
 import { useNavigate } from 'react-router';
 import AuthBrand from './AuthBrand';
 import { designRecipes } from 'hostApp/designRecipes';

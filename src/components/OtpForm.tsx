@@ -3,7 +3,7 @@ import { KeyRound, Loader2, AlertCircle, AlertTriangle, Clock3 } from 'lucide-re
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
 import { LEAF_BACKEND_URL, LEAF_USER_ID, OTP_TIMER_INTERVAL } from '../constants/constants';
-import { showErrorToast, showSuccessToast } from '../helpers/toastify';
+import { showErrorToast, showSuccessToast } from 'hostApp/toast';
 import { useNavigate } from 'react-router';
 
 import '../index.scss';

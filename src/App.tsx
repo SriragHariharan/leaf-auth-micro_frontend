@@ -10,12 +10,12 @@ import LoginForm  from './components/LoginForm';
 import SignupForm from './components/SignupForm';
 import EnterEmailForm from './components/EnterEmailForm';
 import ResetPassword from './components/ResetPassword';
-import { Toaster } from 'react-hot-toast';
+import { Toaster, toastOptions } from 'hostApp/toast';
 
 
 const App = () => (
     <Router>
-      <Toaster position="top-center" reverseOrder={false} />
+      <Toaster position={toastOptions.position} toastOptions={{ duration: toastOptions.duration }} />
       <div className="h-screen w-screen flex">
         <div className="hidden lg:block w-1/2 h-full">
           <ImageCarousel />

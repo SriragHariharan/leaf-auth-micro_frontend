@@ -6,7 +6,7 @@ import { Link } from 'react-router';
 import '../index.scss';
 import axios from 'axios';
 import { LEAF_BACKEND_URL } from '../constants/constants';
-import { showErrorToast } from '../helpers/toastify';
+import { showErrorToast } from 'hostApp/toast';
 import AuthBrand from './AuthBrand';
 import { designRecipes } from 'hostApp/designRecipes';
 

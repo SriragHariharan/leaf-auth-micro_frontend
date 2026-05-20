@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router';
 import axios from 'axios';
 import { GOOGLE_OAUTH_CLIENT_ID,  LEAF_BACKEND_URL } from '../constants/constants';
-import { showErrorToast } from '../helpers/toastify';
+import { showErrorToast } from 'hostApp/toast';
 import { GoogleLogin, GoogleOAuthProvider } from '@react-oauth/google';
 import { jwtDecode } from "jwt-decode";
 

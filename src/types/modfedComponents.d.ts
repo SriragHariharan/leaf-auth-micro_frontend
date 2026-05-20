@@ -22,6 +22,15 @@ declare module "hostApp/themeBootstrap" {
   export const themeBootstrapReady: boolean;
 }
 
+declare module 'hostApp/toast' {
+  import type { ComponentType } from 'react';
+
+  export const Toaster: ComponentType;
+  export const toastOptions: { position: 'bottom-right'; duration: number };
+  export const showErrorToast: (message: string) => void;
+  export const showSuccessToast: (message: string) => void;
+}
+
 declare module "hostApp/designRecipes" {
   export const designRecipes: {
     modalOverlay: string;
