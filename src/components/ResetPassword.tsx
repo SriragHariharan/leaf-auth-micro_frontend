@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import '../index.scss';
 import axios from 'axios';
-import { LEAF_BACKEND_URL } from '../constants/constants';
+import { AUTH_PATHS, authUrl } from '../constants/constants';
 import { showErrorToast, showSuccessToast } from 'hostApp/toast';
 import { useNavigate } from 'react-router';
 import AuthBrand from './AuthBrand';
@@ -51,7 +51,7 @@ const ResetPassword = () => {
 
   const onSubmit = (data: FormData) => {
     setLoading(true); // Set loading to true when the request starts
-    axios.post(LEAF_BACKEND_URL + "/user/auth/reset-password", 
+    axios.post(authUrl(AUTH_PATHS.resetPassword), 
       { ...data }, 
       {
         headers: { 'Authorization': `Bearer ${token}` }

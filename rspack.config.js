@@ -115,7 +115,7 @@ module.exports = {
         "./ResetPassword": "./src/components/ResetPassword.tsx"
       },
       remotes: {
-        hostApp: `host@${process.env.VITE_HOST_REMOTE}`
+        hostApp: `host@${process.env.REACT_APP_HOST_REMOTE}`
       },
       shared: {
         react: {
@@ -151,9 +151,9 @@ module.exports = {
     }),
     new rspack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
-      'process.env.VITE_LEAF_BACKEND_URL': JSON.stringify(process.env.VITE_LEAF_BACKEND_URL),
-      'process.env.VITE_GOOGLE_OAUTH_CLIENT_ID': JSON.stringify(process.env.VITE_GOOGLE_OAUTH_CLIENT_ID),
-      'process.env.VITE_HOST_REMOTE': JSON.stringify(process.env.VITE_HOST_REMOTE),
+      'process.env.REACT_APP_LEAF_BACKEND_URL': JSON.stringify(process.env.REACT_APP_LEAF_BACKEND_URL),
+      'process.env.REACT_APP_GOOGLE_OAUTH_CLIENT_ID': JSON.stringify(process.env.REACT_APP_GOOGLE_OAUTH_CLIENT_ID),
+      'process.env.REACT_APP_HOST_REMOTE': JSON.stringify(process.env.REACT_APP_HOST_REMOTE),
     }),
     new rspack.ProgressPlugin({}),
     new rspack.HtmlRspackPlugin({

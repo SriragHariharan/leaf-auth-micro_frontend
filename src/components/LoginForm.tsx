@@ -3,7 +3,7 @@ import { Mail, Lock, Eye, EyeOff, Loader2, AlertCircle } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router';
 import axios from 'axios';
-import { GOOGLE_OAUTH_CLIENT_ID,  LEAF_BACKEND_URL } from '../constants/constants';
+import { AUTH_PATHS, authUrl, GOOGLE_OAUTH_CLIENT_ID } from '../constants/constants';
 import { showErrorToast } from 'hostApp/toast';
 import { GoogleLogin, GoogleOAuthProvider } from '@react-oauth/google';
 import { jwtDecode } from "jwt-decode";
@@ -43,7 +43,7 @@ const LoginForm = () => {
   const handleOauthSignup = async(data:Object) => {
     const globalStore = await useGlobalStore();
 
-    axios.post(LEAF_BACKEND_URL + "/user/auth/oauth-signup", { ...data })
+    axios.post(authUrl(AUTH_PATHS.oauthSignup), { ...data })
     .then(resp => {
       const { accessToken, refreshToken, username, profilePicture } = resp?.data?.data;
       globalStore.getState().setAccessToken(accessToken);
@@ -59,7 +59,7 @@ const LoginForm = () => {
     setLoading(true);
     const globalStore = await useGlobalStore();
 
-    axios.post( LEAF_BACKEND_URL + "/user/auth/login", { ...data } )
+    axios.post(authUrl(AUTH_PATHS.login), { ...data })
     .then(resp => {
       const { accessToken, refreshToken, username, profilePicture } = resp?.data?.data;
       globalStore.getState().setAccessToken(accessToken);

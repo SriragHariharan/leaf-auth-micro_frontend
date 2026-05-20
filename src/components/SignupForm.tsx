@@ -3,7 +3,7 @@ import { User, Mail, Lock, Eye, EyeOff, Loader2, AlertCircle } from 'lucide-reac
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router';
-import { GOOGLE_OAUTH_CLIENT_ID, LEAF_BACKEND_URL, LEAF_USER_ID } from '../constants/constants';
+import { AUTH_PATHS, authUrl, GOOGLE_OAUTH_CLIENT_ID, LEAF_USER_ID } from '../constants/constants';
 import { showErrorToast } from 'hostApp/toast';
 
 import '../index.scss'
@@ -37,7 +37,7 @@ const SignupForm = () => {
 
   const onSubmit = (data: FormData) => {
     setLoading(true);
-    axios.post(LEAF_BACKEND_URL + "/user/auth/signup", { ...data })
+    axios.post(authUrl(AUTH_PATHS.signup), { ...data })
       .then(resp => {
         localStorage.setItem(LEAF_USER_ID, resp?.data?.data?.userID);
         navigate("/confirm-otp");
@@ -57,7 +57,7 @@ const SignupForm = () => {
   const handleOauthSignup = async(data:Object) => {
     const globalStore = await useGlobalStore();
 
-    axios.post(LEAF_BACKEND_URL + "/user/auth/oauth-signup", { ...data })
+    axios.post(authUrl(AUTH_PATHS.oauthSignup), { ...data })
       .then(resp => {
         const { accessToken, refreshToken, username, profilePicture } = resp?.data?.data;
         globalStore.getState().setAccessToken(accessToken);

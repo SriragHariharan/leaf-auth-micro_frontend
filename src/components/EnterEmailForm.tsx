@@ -5,7 +5,7 @@ import { Link } from 'react-router';
 
 import '../index.scss';
 import axios from 'axios';
-import { LEAF_BACKEND_URL } from '../constants/constants';
+import { AUTH_PATHS, authUrl } from '../constants/constants';
 import { showErrorToast } from 'hostApp/toast';
 import AuthBrand from './AuthBrand';
 import { designRecipes } from 'hostApp/designRecipes';
@@ -30,7 +30,7 @@ const EnterEmailForm = () => {
 
   const onSubmit = (data: FormData) => {
     setLoading(true); // Set loading to true when the request starts
-    axios.post(LEAF_BACKEND_URL + "/user/auth/confirm-email", { ...data })
+    axios.post(authUrl(AUTH_PATHS.confirmEmail), { ...data })
       .then(resp => {
         setInfoMessage(resp?.data?.message);
       })

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { KeyRound, Loader2, AlertCircle, AlertTriangle, Clock3 } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
-import { LEAF_BACKEND_URL, LEAF_USER_ID, OTP_TIMER_INTERVAL } from '../constants/constants';
+import { AUTH_PATHS, authUrl, LEAF_USER_ID, OTP_TIMER_INTERVAL } from '../constants/constants';
 import { showErrorToast, showSuccessToast } from 'hostApp/toast';
 import { useNavigate } from 'react-router';
 
@@ -85,7 +85,7 @@ const OtpForm = () => {
     const userID = localStorage.getItem(LEAF_USER_ID);
     const globalStore = await useGlobalStore();
 
-    axios.post(LEAF_BACKEND_URL + "/user/auth/confirm-otp", { ...data, userID })
+    axios.post(authUrl(AUTH_PATHS.confirmOtp), { ...data, userID })
       .then(resp => {
         const { accessToken, refreshToken, username, profilePicture } = resp?.data?.data;
         localStorage.clear();
@@ -105,7 +105,7 @@ const OtpForm = () => {
   const resendOtpRequest = async () => {
     const userID = localStorage.getItem(LEAF_USER_ID);
     try {
-        const resp = await axios.post(LEAF_BACKEND_URL + "/user/auth/resend-otp", { userID });
+        const resp = await axios.post(authUrl(AUTH_PATHS.resendOtp), { userID });
         console.log(resp.data); // Log the response for debugging
         showSuccessToast("OTP has been resent to your email."); // Notify user
     } catch (err: any) {
