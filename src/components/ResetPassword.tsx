@@ -7,7 +7,7 @@ import { AUTH_PATHS, authUrl } from '../constants/constants';
 import { showErrorToast, showSuccessToast } from 'hostApp/toast';
 import { useNavigate } from 'react-router';
 import AuthBrand from './AuthBrand';
-import { designRecipes } from 'hostApp/designRecipes';
+import { designRecipes } from "@srirag/leaf-design-system"
 
 interface FormData {
   password: string;

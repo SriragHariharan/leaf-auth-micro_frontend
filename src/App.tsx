@@ -11,7 +11,7 @@ import SignupForm from './components/SignupForm';
 import EnterEmailForm from './components/EnterEmailForm';
 import ResetPassword from './components/ResetPassword';
 import { Toaster, toastOptions } from 'hostApp/toast';
-import { designRecipes } from 'hostApp/designRecipes';
+import { designRecipes } from "@srirag/leaf-design-system"
 
 
 const App = () => (

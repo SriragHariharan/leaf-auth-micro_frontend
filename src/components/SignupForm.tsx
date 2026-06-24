@@ -10,7 +10,7 @@ import '../index.scss'
 import { GoogleLogin, GoogleOAuthProvider } from '@react-oauth/google';
 import { jwtDecode } from 'jwt-decode';
 import AuthBrand from './AuthBrand';
-import { designRecipes } from 'hostApp/designRecipes';
+import { designRecipes } from "@srirag/leaf-design-system"
 
 interface FormData {
   username: string;

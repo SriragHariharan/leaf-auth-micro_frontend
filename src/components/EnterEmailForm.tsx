@@ -8,7 +8,7 @@ import axios from 'axios';
 import { AUTH_PATHS, authUrl } from '../constants/constants';
 import { showErrorToast } from 'hostApp/toast';
 import AuthBrand from './AuthBrand';
-import { designRecipes } from 'hostApp/designRecipes';
+import { designRecipes } from "@srirag/leaf-design-system"
 
 interface FormData {
   email: string;

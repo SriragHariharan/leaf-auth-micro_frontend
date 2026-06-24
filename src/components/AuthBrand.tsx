@@ -1,6 +1,6 @@
 import React from 'react';
 import { Leaf } from 'lucide-react';
-import { designRecipes } from 'hostApp/designRecipes';
+import { designRecipes } from "@srirag/leaf-design-system"
 
 interface AuthBrandProps {
   className?: string;

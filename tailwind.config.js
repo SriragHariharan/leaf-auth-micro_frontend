@@ -1,6 +1,6 @@
-const { tailwindTheme } = require("../host/src/design-system/tailwindTheme");
+import { tailwindTheme } from '@srirag/leaf-design-system/tailwindTheme';
 
-module.exports = {
+export default {
   content: ["./src/**/*.{js,jsx,ts,tsx}"],
   darkMode: false, // or 'media' or 'class'
   theme: {
@@ -10,4 +10,4 @@ module.exports = {
     extend: {},
   },
   plugins: [],
-}
+};

@@ -16,7 +16,7 @@ interface FormData {
 
 import '../index.scss'
 import AuthBrand from './AuthBrand';
-import { designRecipes } from 'hostApp/designRecipes';
+import { designRecipes } from "@srirag/leaf-design-system"
 
 const useGlobalStore = async () => {
   const { default: globalStore } = await import('hostApp/GlobalStore');

@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router';
 
 import '../index.scss';
 import AuthBrand from './AuthBrand';
-import { designRecipes } from 'hostApp/designRecipes';
+import { designRecipes } from "@srirag/leaf-design-system"
 
 interface FormData {
   otp: string;

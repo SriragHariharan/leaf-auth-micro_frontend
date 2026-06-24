@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 import '../index.scss'
-import { designRecipes } from 'hostApp/designRecipes';
+import { designRecipes } from "@srirag/leaf-design-system"
 
 const destinations = [
   {
