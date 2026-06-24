@@ -18,7 +18,7 @@ module.exports = {
   },
 
   output: {
-    publicPath: isDev ? `http://localhost:${port}/` : 'https://auth.leaf.monster/',
+    publicPath: "auto",
   },
   
   devServer: {
